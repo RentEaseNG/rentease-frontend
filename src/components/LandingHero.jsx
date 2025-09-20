@@ -1,4 +1,5 @@
 import React from 'react';
+import { FaSearchLocation } from 'react-icons/fa';
 
 const LandingHero = () => {
   return (
@@ -24,7 +25,7 @@ const LandingHero = () => {
           <form className="flex w-full items-center rounded-full bg-white/90 shadow-2xl backdrop-blur-sm p-2">
             <div className="flex-shrink-0 pl-4 pr-2">
               <span className="material-symbols-outlined text-gray-500">
-                search
+                <FaSearchLocation />
               </span>
             </div>
 
