@@ -1,8 +1,10 @@
 import React, {useState} from 'react'
 import { useNavigate, Link } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
 
 const LoginForm = () => {
     const navigate = useNavigate();
+    const { login } = useAuth();
 
     const [formData, setFormData] = useState({
         email: '',
@@ -41,6 +43,14 @@ const LoginForm = () => {
           setSuccess('✅ Login successful!');
           setError('');
           console.log('Server response:', data);
+          
+          // Store only token in context
+          login(data.data.token);
+          
+          // Navigate to profile page
+          setTimeout(() => {
+            navigate('/profile');
+          }, 1000);
     
           // optionally clear form
           setFormData({
