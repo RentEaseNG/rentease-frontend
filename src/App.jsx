@@ -7,6 +7,7 @@ import Profile from './pages/Profile';
 import Navbar from './components/Navbar';
 import { AuthProvider } from './context/AuthContext';
 import ProtectedRoute from './components/ProtectedRoute';
+import ProfileComponent from './components/ProfileComponent';
 
 function App() {
 
@@ -23,6 +24,7 @@ function App() {
               <Profile />
             </ProtectedRoute>
           } />
+          <Route path="/details" element={<ProfileComponent />} />
         </Routes>
       </Router>
     </AuthProvider>
