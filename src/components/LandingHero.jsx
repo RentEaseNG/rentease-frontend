@@ -36,6 +36,8 @@ const LandingHero = () => {
             />
 
             <button
+
+            
               className="flex-shrink-0 rounded-full h-12 px-8 bg-blue-600 text-white text-base font-bold tracking-wide hover:bg-[var(--primary-color-hover)] transition-all duration-300"
               type="submit"
             >

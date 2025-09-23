@@ -23,7 +23,7 @@ const Navbar = () => {
   return (
     <header className='relative shadow-md'>
       <div className='flex justify-between items-center p-4 container mx-auto'>
-        <span className="text-xl font-bold">RentEaseNG</span>
+        <span className="text-xl font-bold"><Link to="/">RentEaseNG</Link></span>
         
         {/* Mobile menu button */}
         <button 
@@ -38,7 +38,7 @@ const Navbar = () => {
         {/* Desktop Navigation */}
         <nav className="hidden md:block">
           <ul className='flex gap-6'>
-            <li><Link to="/" className="hover:text-blue-500 transition-colors">Home</Link></li>
+           
             <li><Link to="/about" className="hover:text-blue-500 transition-colors">About</Link></li>
             <li><Link to="/services" className="hover:text-blue-500 transition-colors">Services</Link></li>
             <li><Link to="/contact" className="hover:text-blue-500 transition-colors">Contact</Link></li>
