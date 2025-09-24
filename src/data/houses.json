@@ -15,7 +15,7 @@
     "price": "₦750,000 / year",
     "location": "Ibadan, Oyo",
     "type": "2 Bedroom",
-    "image": "/images/house2.webp"
+    "image": "/images/image2.webp"
   },
   {
     "id": 3,
@@ -23,7 +23,7 @@
     "price": "₦500,000 / year",
     "location": "Abuja, FCT",
     "type": "Room & Parlour",
-    "image": "/images/house3.webp"
+    "image": "/images/image3.webp"
   },
   {
     "id": 4,
@@ -31,6 +31,6 @@
     "price": "₦2,500,000 / year",
     "location": "Victoria Island, Lagos",
     "type": "4 Bedroom Duplex",
-   "image": "/images/house4.webp"
+   "image": "/images/image4.webp"
   }
 ]

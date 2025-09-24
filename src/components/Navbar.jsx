@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import { LogOut } from "lucide-react";
 
 import { Link, useNavigate } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
@@ -60,28 +61,12 @@ const Navbar = () => {
         </nav>
         
         {/* Desktop Auth Buttons */}
-        <div className="hidden md:flex items-center gap-3">
+        <div className="hidden md:flex -mr-15 items-center gap-3">
           {loading ? (
             <span>Loading...</span>
           ) : user ? (
             <>
               {/* User Avatar + Name → Profile */}
-              
-              <button 
-                onClick={() => navigate('/profile')} 
-                className="flex items-center gap-2 hover:text-blue-500 transition-colors"
-              >
-                Dashboard
-              </button>
-              
-
-              {/* Logout */}
-              <button 
-                className='p-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-colors' 
-                onClick={handleLogout}
-              >
-                Logout
-              </button>
               <button 
                 onClick={() => navigate('/details')} 
                 className="flex items-center gap-2 hover:text-blue-500 transition-colors"
@@ -91,10 +76,27 @@ const Navbar = () => {
                 </div>
                 
               </button>
+              <button 
+                onClick={() => navigate('/profile')} 
+                className="flex items-center gap-2 hover:text-blue-500 transition-colors"
+              >
+                Dashboard
+              </button>
+              
+
+              {/* Logout */}
+              <button
+  onClick={handleLogout}
+  className="flex items-center gap-2 px-4 py-2 rounded-lg border border-red-500 text-red-500 hover:bg-red-500 hover:text-white transition-colors"
+>
+  <LogOut size={18} />
+  <span>Logout</span>
+</button>
+              
             </>
           ) : (
             <>
-              <Link to="/login" className='p-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors'>Login</Link>
+              <Link to="/login" className='p-2 text-gray-500 font-bold rounded-lg hover:text-blue-600 transition-colors'>Login</Link>
               <button 
                 className='p-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors' 
                 onClick={handleRegister}
@@ -140,18 +142,19 @@ const Navbar = () => {
                   </button>
 
                   {/* Mobile Logout */}
-                  <button 
-                    className='p-2 bg-red-500 text-white rounded-lg w-full hover:bg-red-600 transition-colors' 
-                    onClick={() => { handleLogout(); toggleMenu(); }}
-                  >
-                    Logout
-                  </button>
+                 <button
+  onClick={() => { handleLogout(); toggleMenu(); }}
+  className="flex items-center justify-center gap-2 w-full px-4 py-2 rounded-lg border border-red-500 text-red-500 hover:bg-red-500 hover:text-white transition-colors"
+>
+  <LogOut size={18} />
+  <span>Logout</span>
+</button>
                 </div>
               ) : (
                 <div className="flex flex-col gap-3">
-                  <Link to="/login" className='p-2 bg-blue-500 text-white rounded-lg text-center hover:bg-blue-600 transition-colors' onClick={toggleMenu}>Login</Link>
+                  <Link to="/login" className='p-2  text-gray-500 font-bold rounded-lg text-center hover:text-blue-600 transition-colors' onClick={toggleMenu}>Login</Link>
                   <button 
-                    className='p-2 bg-blue-600 text-white rounded-lg w-full hover:bg-blue-700 transition-colors' 
+                    className='p-2 bg-blue-600 text-white rounded-lg w-full  hover:bg-blue-700 transition-colors' 
                     onClick={() => { handleRegister(); toggleMenu(); }}
                   >
                     Register
