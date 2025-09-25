@@ -49,7 +49,7 @@ const LoginForm = () => {
           
           // Navigate to profile page
           setTimeout(() => {
-            navigate('/profile');
+            navigate('/dashboard');
           }, 1000);
     
           // optionally clear form

@@ -1,11 +1,11 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useParams, Link, Navigate } from "react-router-dom";
-import { useAuth } from "../context/AuthContext"; 
+import { useAuth } from "../context/AuthContext";
 import houses from "../data/houses.json";
 
 function HouseDetails() {
   const { id } = useParams();
-  const { user } = useAuth(); 
+  const { user } = useAuth();
   const house = houses.find((h) => h.id === parseInt(id));
   const [currentIndex, setCurrentIndex] = useState(null);
 
@@ -36,24 +36,53 @@ function HouseDetails() {
     setCurrentIndex((prev) => (prev === allImages.length - 1 ? 0 : prev + 1));
   };
 
+  useEffect(() => {
+    if (currentIndex === null) return; // lightbox closed → skip
+
+    const handleKeyDown = (e) => {
+      if (e.key === "ArrowLeft") {
+        handlePrev();
+      } else if (e.key === "ArrowRight") {
+        handleNext();
+      } else if (e.key === "Escape") {
+        setCurrentIndex(null); // close lightbox
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [currentIndex]); // re-run only when modal opens/closes
+
   return (
     <div className="min-h-screen bg-gray-50 p-6">
       <Link to="/" className="text-blue-600 underline">
         ← Back to listings
       </Link>
 
-      <div className="mt-6 bg-white rounded-lg shadow-md p-6">
-        {/* Grid of images */}
-        <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-          {allImages.map((img, index) => (
+      <div className="flex gap-6 mt-6 bg-white rounded-lg shadow-md p-6">
+        <div className="w-1/2">
+          {/* Main Image */}
+          <div className="mb-4">
             <img
-              key={index}
-              src={img}
-              alt={`${house.title} ${index}`}
-              onClick={() => setCurrentIndex(index)}
-              className="h-48 w-full object-cover rounded-md cursor-pointer hover:opacity-90"
+              src={allImages[0]}
+              alt={`${house.title} main`}
+              onClick={() => setCurrentIndex(0)}
+              className="w-full h-80 object-cover rounded-lg cursor-pointer hover:opacity-90"
             />
-          ))}
+          </div>
+
+          {/* Thumbnails */}
+          <div className="grid grid-cols-3 md:grid-cols-4 gap-4">
+            {allImages.slice(1).map((img, index) => (
+              <img
+                key={index + 1}
+                src={img}
+                alt={`${house.title} ${index + 1}`}
+                onClick={() => setCurrentIndex(index + 1)}
+                className="h-32 w-full object-cover rounded-md cursor-pointer hover:opacity-90"
+              />
+            ))}
+          </div>
         </div>
 
         {/* Image Modal */}
@@ -61,7 +90,7 @@ function HouseDetails() {
           <div className="fixed inset-0 bg-black bg-opacity-80 flex items-center justify-center z-50">
             <button
               onClick={() => setCurrentIndex(null)}
-              className="absolute top-5 right-5 text-white text-3xl font-bold"
+              className="absolute top-5 right-5 text-white text-3xl font-bold cursor-pointer"
             >
               ✕
             </button>
@@ -91,8 +120,8 @@ function HouseDetails() {
         )}
 
         {/* Details */}
-        <div>
-          <h1 className="text-2xl font-bold mt-6">{house.title}</h1>
+        <div className="md:w-1/2">
+          <h1 className="text-2xl font-bold">{house.title}</h1>
           <p className="text-green-600 font-bold text-lg">{house.price}</p>
           <p className="text-gray-700 mt-2">{house.location}</p>
           <p className="text-gray-600 mt-1">
@@ -124,7 +153,7 @@ function HouseDetails() {
               rel="noopener noreferrer"
               className="inline-block bg-green-900 text-white px-6 py-3 rounded-lg font-bold hover:bg-green-800 transition"
             >
-              Book Appointment
+              Book Appartment
             </a>
           </div>
         </div>
