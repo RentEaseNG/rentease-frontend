@@ -50,7 +50,7 @@ const LandingHero = ({ onSearch }) => {
 
             {/* Button */}
             <button
-              className="md:flex justify-center items-center hidden flex-shrink-0 rounded-full h-12 px-8 bg-blue-600 text-white text-base font-bold tracking-wide hover:bg-blue-700 transition-all duration-300 cursor-pointer"
+              className="md:flex justify-center items-center hidden flex-shrink-0 rounded-full h-12 px-8 bg-green-900 text-white text-base font-bold tracking-wide hover:bg-green-800 transition-all duration-300 cursor-pointer"
               type="submit"
             >
               Search

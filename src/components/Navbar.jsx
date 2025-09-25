@@ -32,7 +32,7 @@ const Navbar = () => {
         
         {/* Mobile menu button */}
         <button 
-          className="md:hidden p-2 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className="md:hidden p-2 rounded-md focus:outline-none focus:ring-2 focus:ring-green-900"
           onClick={toggleMenu}
         >
           <svg xmlns="http://www.w3.org/2000/svg" 
@@ -61,7 +61,7 @@ const Navbar = () => {
         </nav>
         
         {/* Desktop Auth Buttons */}
-        <div className="hidden md:flex -mr-15 items-center gap-3">
+        <div className="hidden md:flex items-center gap-3">
           {loading ? (
             <span>Loading...</span>
           ) : user ? (
@@ -78,7 +78,7 @@ const Navbar = () => {
             <>
               <Link to="/login" className='p-2 text-gray-500 font-bold rounded-lg hover:text-blue-600 transition-colors'>Login</Link>
               <button 
-                className='p-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors' 
+                className='p-2 bg-green-900 text-white rounded-lg hover:bg-green-800 transition-colors'
                 onClick={handleRegister}
               >
                 Register
