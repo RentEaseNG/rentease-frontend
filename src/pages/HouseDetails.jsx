@@ -1,31 +1,18 @@
-<<<<<<< HEAD
 import React, { useState, useEffect } from "react";
 import { useParams, Link, Navigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
-=======
-import React, { useState } from "react";
-import { useParams, Link } from "react-router-dom";
->>>>>>> main
 import houses from "../data/houses.json";
 
 function HouseDetails() {
   const { id } = useParams();
-<<<<<<< HEAD
   const { user } = useAuth();
-=======
->>>>>>> main
   const house = houses.find((h) => h.id === parseInt(id));
   const [currentIndex, setCurrentIndex] = useState(null);
-// if (!user) {
-//   return (
-//     <div className="p-6 text-center">
-//       <p className="text-lg">You must sign in to view house details.</p>
-//       <Link to="/login" className="text-blue-600 underline mt-4 block">
-//         Go to Login
-//       </Link>
-//     </div>
-//   );
-// }
+
+  // 🔒 Block guests
+  if (!user) {
+    return <Navigate to="/login" replace />;
+  }
 
   if (!house) {
     return (
@@ -111,7 +98,7 @@ function HouseDetails() {
             {/* Prev Button */}
             <button
               onClick={handlePrev}
-              className="absolute left-5 text-white text-4xl font-bold px-3 py-1 bg-black bg-opacity-40 rounded-full hover:bg-opacity-70"
+              className="absolute left-5 text-white text-4xl font-bold px-3 py-1 bg-black bg-opacity-40 rounded-full hover:bg-opacity-70 cursor-pointer"
             >
               ‹
             </button>
@@ -125,7 +112,7 @@ function HouseDetails() {
             {/* Next Button */}
             <button
               onClick={handleNext}
-              className="absolute right-5 text-white text-4xl font-bold px-3 py-1 bg-black bg-opacity-40 rounded-full hover:bg-opacity-70"
+              className="absolute right-5 text-white text-4xl font-bold px-3 py-1 bg-black bg-opacity-40 rounded-full hover:bg-opacity-70 cursor-pointer"
             >
               ›
             </button>
@@ -133,41 +120,14 @@ function HouseDetails() {
         )}
 
         {/* Details */}
-<<<<<<< HEAD
         <div className="md:w-1/2">
           <h1 className="text-2xl font-bold">{house.title}</h1>
           <p className="text-green-600 font-bold text-lg">{house.price}</p>
           <p className="text-gray-700 mt-2">{house.location}</p>
           <p className="text-gray-600 mt-1">
             <strong>Type:</strong> {house.type}
-=======
-        <h1 className="text-2xl font-bold mt-6">{house.title}</h1>
-        <p className="text-green-600 font-bold text-lg">{house.price}</p>
-        <p className="text-gray-700 mt-2">{house.location}</p>
-        <p className="text-gray-600 mt-1">
-          <strong>Type:</strong> {house.type}
-        </p>
+          </p>
 
-        <div className="mt-4 space-y-2">
-          <p>
-            <strong>Landlord:</strong> {house.landlord || "N/A"}
->>>>>>> main
-          </p>
-          <p>
-            <strong>Address:</strong>{" "}
-            {house.fullAddress || "No full address yet"}
-          </p>
-          <p>
-            <strong>Details:</strong>{" "}
-            {house.description || "No extra details available"}
-          </p>
-          <p>
-            <strong>Contact:</strong>{" "}
-            {house.inspectionContact || "No contact available"}
-          </p>
-        </div>
-
-<<<<<<< HEAD
           <div className="mt-4 space-y-2">
             <p>
               <strong>Landlord:</strong> {house.landlord || "N/A"}
@@ -196,17 +156,6 @@ function HouseDetails() {
               Book Appartment
             </a>
           </div>
-=======
-        <div className="mt-6">
-          <a
-            href={house.appointmentLink || "#"}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-block bg-blue-600 text-white px-6 py-3 rounded-lg font-bold hover:bg-blue-700 transition"
-          >
-            Book Appointment
-          </a>
->>>>>>> main
         </div>
       </div>
     </div>
