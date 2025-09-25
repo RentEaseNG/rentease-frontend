@@ -69,7 +69,7 @@ function HouseDetails() {
             {/* Prev Button */}
             <button
               onClick={handlePrev}
-              className="absolute left-5 text-white text-4xl font-bold px-3 py-1 bg-black bg-opacity-40 rounded-full hover:bg-opacity-70 cursor-pointer"
+              className="absolute left-5 text-white text-4xl font-bold px-3 py-1 bg-black bg-opacity-40 rounded-full hover:bg-opacity-70"
             >
               ‹
             </button>
@@ -83,7 +83,7 @@ function HouseDetails() {
             {/* Next Button */}
             <button
               onClick={handleNext}
-              className="absolute right-5 text-white text-4xl font-bold px-3 py-1 bg-black bg-opacity-40 rounded-full hover:bg-opacity-70 cursor-pointer"
+              className="absolute right-5 text-white text-4xl font-bold px-3 py-1 bg-black bg-opacity-40 rounded-full hover:bg-opacity-70"
             >
               ›
             </button>
@@ -91,42 +91,40 @@ function HouseDetails() {
         )}
 
         {/* Details */}
-        <div>
-          <h1 className="text-2xl font-bold mt-6">{house.title}</h1>
-          <p className="text-green-600 font-bold text-lg">{house.price}</p>
-          <p className="text-gray-700 mt-2">{house.location}</p>
-          <p className="text-gray-600 mt-1">
-            <strong>Type:</strong> {house.type}
+        <h1 className="text-2xl font-bold mt-6">{house.title}</h1>
+        <p className="text-green-600 font-bold text-lg">{house.price}</p>
+        <p className="text-gray-700 mt-2">{house.location}</p>
+        <p className="text-gray-600 mt-1">
+          <strong>Type:</strong> {house.type}
+        </p>
+
+        <div className="mt-4 space-y-2">
+          <p>
+            <strong>Landlord:</strong> {house.landlord || "N/A"}
           </p>
+          <p>
+            <strong>Address:</strong>{" "}
+            {house.fullAddress || "No full address yet"}
+          </p>
+          <p>
+            <strong>Details:</strong>{" "}
+            {house.description || "No extra details available"}
+          </p>
+          <p>
+            <strong>Contact:</strong>{" "}
+            {house.inspectionContact || "No contact available"}
+          </p>
+        </div>
 
-          <div className="mt-4 space-y-2">
-            <p>
-              <strong>Landlord:</strong> {house.landlord || "N/A"}
-            </p>
-            <p>
-              <strong>Address:</strong>{" "}
-              {house.fullAddress || "No full address yet"}
-            </p>
-            <p>
-              <strong>Details:</strong>{" "}
-              {house.description || "No extra details available"}
-            </p>
-            <p>
-              <strong>Contact:</strong>{" "}
-              {house.inspectionContact || "No contact available"}
-            </p>
-          </div>
-
-          <div className="mt-6">
-            <a
-              href={house.appointmentLink || "#"}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-block bg-green-900 text-white px-6 py-3 rounded-lg font-bold hover:bg-green-800 transition"
-            >
-              Book Appointment
-            </a>
-          </div>
+        <div className="mt-6">
+          <a
+            href={house.appointmentLink || "#"}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-block bg-blue-600 text-white px-6 py-3 rounded-lg font-bold hover:bg-blue-700 transition"
+          >
+            Book Appointment
+          </a>
         </div>
       </div>
     </div>
