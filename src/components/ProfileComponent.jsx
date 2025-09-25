@@ -9,9 +9,15 @@ const ProfileComponent = () => {
     if (!user || !user.name) return '?';
     return user.name.charAt(0).toUpperCase();
   };
+   if (!user) {
+    return <Navigate to="/login" replace />;
+  }
 
   return (
+    <div>
+      <h1 className="text-3xl font-bold text-center mb-10 mt-10">Your Profile</h1>
     <div className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4 max-w-md mx-auto">
+    
       <div className="flex flex-col items-center">
         <div className="w-24 h-24 rounded-full bg-blue-500 flex items-center justify-center text-white text-3xl font-bold mb-4">
           {getInitial()}
@@ -33,6 +39,7 @@ const ProfileComponent = () => {
           </div>
         </div>
       </div>
+    </div>
     </div>
   );
 };

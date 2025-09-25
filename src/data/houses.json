@@ -1,0 +1,42 @@
+
+
+[
+  {
+    "id": 1,
+    "title": "Modern Self-Contain",
+    "price": "₦350,000 / year",
+    "location": "Lekki, Lagos",
+    "type": "Self Contain",
+    "image": "/images/house1.webp",
+    "images": ["/images/image2.webp", "/images/image3.webp", "/images/image4.webp", "/images/image2.webp"],
+    "landlord": "Mr. John Doe",
+    "fullAddress": "No. 12 Admiralty Way, Lekki Phase 1, Lagos",
+    "description": "Spacious self-contain with 24/7 power and water supply.",
+    "inspectionContact": "08012345678",
+    "appointmentLink": "https://wa.me/2348012345678"
+  },
+  {
+    "id": 2,
+    "title": "Two Bedroom Flat",
+    "price": "₦750,000 / year",
+    "location": "Ibadan, Oyo",
+    "type": "2 Bedroom",
+    "image": "/images/image2.webp"
+  },
+  {
+    "id": 3,
+    "title": "Room & Parlour",
+    "price": "₦500,000 / year",
+    "location": "Abuja, FCT",
+    "type": "Room & Parlour",
+    "image": "/images/image3.webp"
+  },
+  {
+    "id": 4,
+    "title": "Luxury Duplex",
+    "price": "₦2,500,000 / year",
+    "location": "Victoria Island, Lagos",
+    "type": "4 Bedroom Duplex",
+   "image": "/images/image4.webp"
+  }
+]
