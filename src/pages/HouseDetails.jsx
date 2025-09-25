@@ -1,18 +1,21 @@
 import React, { useState } from "react";
-import { useParams, Link, Navigate } from "react-router-dom";
-import { useAuth } from "../context/AuthContext"; 
+import { useParams, Link } from "react-router-dom";
 import houses from "../data/houses.json";
 
 function HouseDetails() {
   const { id } = useParams();
-  const { user } = useAuth(); 
   const house = houses.find((h) => h.id === parseInt(id));
   const [currentIndex, setCurrentIndex] = useState(null);
-
-  // 🔒 Block guests
-  if (!user) {
-    return <Navigate to="/login" replace />;
-  }
+// if (!user) {
+//   return (
+//     <div className="p-6 text-center">
+//       <p className="text-lg">You must sign in to view house details.</p>
+//       <Link to="/login" className="text-blue-600 underline mt-4 block">
+//         Go to Login
+//       </Link>
+//     </div>
+//   );
+// }
 
   if (!house) {
     return (
