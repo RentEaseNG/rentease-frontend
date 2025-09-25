@@ -2,7 +2,7 @@ import React from 'react';
 import ProfileComponent from '../components/ProfileComponent';
 import { useAuth } from '../context/AuthContext';
 import { Navigate } from 'react-router-dom';
-import TenantDashboard from './FeaturedProperties';
+import FeaturedProperties from './FeaturedProperties';
 
 const Profile = () => {
   const { user, loading } = useAuth();
@@ -21,6 +21,7 @@ const Profile = () => {
     <div className="container mx-auto py-8">
       
       <ProfileComponent />
+      {/* <FeaturedProperties /> Keep components for Dashboard page */}
     </div>
   );
 };
