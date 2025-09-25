@@ -21,7 +21,7 @@ const Profile = () => {
     <div className="container mx-auto py-8">
       
       <ProfileComponent />
-      {/* <FeaturedProperties /> Keep components for Dashboard page */}
+      {/* <FeaturedProperties /> Keep components for Dashboard page later */}
     </div>
   );
 };
