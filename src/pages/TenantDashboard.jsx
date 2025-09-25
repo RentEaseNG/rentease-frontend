@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext"; // import your auth hook
 import houses from "../data/houses.json";
 
-function FeaturedProperties({ query }) {
+function TenantDashboard({ query }) {
   const { user } = useAuth(); // get user directly from context
   const navigate = useNavigate();
 
@@ -58,4 +58,4 @@ function FeaturedProperties({ query }) {
   );
 }
 
-export default FeaturedProperties;
+export default TenantDashboard;
