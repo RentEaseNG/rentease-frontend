@@ -23,8 +23,8 @@ const LandingHero = () => {
 
         <div className="mt-10 max-w-2xl mx-auto w-full">
           <form className="flex w-full items-center rounded-full bg-white/90 shadow-2xl backdrop-blur-sm p-2">
-            <div className="flex-shrink-0 pl-4 pr-2">
-              <span className="material-symbols-outlined text-gray-500">
+            <div className="md:flex hidden flex-shrink-0 pl-4 pr-2">
+              <span className="text-gray-500">
                 <FaSearchLocation />
               </span>
             </div>
@@ -36,10 +36,15 @@ const LandingHero = () => {
             />
 
             <button
-              className="flex-shrink-0 rounded-full h-12 px-8 bg-blue-600 text-white text-base font-bold tracking-wide hover:bg-[var(--primary-color-hover)] transition-all duration-300"
+              className="md:flex justify-center items-center hidden flex-shrink-0 rounded-full h-12 px-8 bg-blue-600 text-white text-base font-bold tracking-wide hover:bg-blue-700 transition-all duration-300 cursor-pointer"
               type="submit"
             >
               Search
+            </button>
+            <button type="submit" className="flex md:hidden flex-shrink-0 pl-4 pr-2">
+              <span className="text-gray-500">
+                <FaSearchLocation />
+              </span>
             </button>
           </form>
         </div>

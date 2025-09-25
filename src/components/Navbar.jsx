@@ -51,13 +51,13 @@ const Navbar = () => {
             <span>Loading...</span>
           ) : user ? (
             <>
-              <Link to="/profile" className="flex items-center gap-2">
+              <Link to="/profile" className="flex items-center gap-2 cursor-pointer">
                 <div className="w-8 h-8 rounded-full bg-blue-500 flex items-center justify-center text-white font-bold">
                   {user.name ? user.name.charAt(0).toUpperCase() : user.email ? user.email.charAt(0).toUpperCase() : '?'}
                 </div>
                 <span>{user.name || user.email}</span>
               </Link>
-              <button className='p-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-colors' onClick={handleLogout}>Logout</button>
+              <button className='p-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-colors cursor-pointer' onClick={handleLogout}>Logout</button>
             </>
           ) : (
             <>
