@@ -137,13 +137,13 @@ const RegisterForm = () => {
       <div className="flex items-center justify-between">
         <button 
           type="submit"
-          className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded 
+          className="bg-green-900 hover:bg-green-800 text-white font-bold py-2 px-4 rounded
                      focus:outline-none focus:shadow-outline w-full"
         >
           Register
         </button>
       </div>
-        <p>Already have an account? <Link to="/login" className="text-blue-500">Login here</Link></p>
+        <p>Already have an account? <Link to="/login" className="text-green-500">Login here</Link></p>
     </form>
   );
 };

@@ -32,7 +32,7 @@ const Navbar = () => {
         
         {/* Mobile menu button */}
         <button 
-          className="md:hidden p-2 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className="md:hidden p-2 rounded-md focus:outline-none focus:ring-2 focus:ring-green-900"
           onClick={toggleMenu}
         >
           <svg xmlns="http://www.w3.org/2000/svg" 
@@ -61,44 +61,24 @@ const Navbar = () => {
         </nav>
         
         {/* Desktop Auth Buttons */}
-        <div className="hidden md:flex -mr-15 items-center gap-3">
+        <div className="hidden md:flex items-center gap-3">
           {loading ? (
             <span>Loading...</span>
           ) : user ? (
             <>
-              {/* User Avatar + Name → Profile */}
-              <button 
-                onClick={() => navigate('/details')} 
-                className="flex items-center gap-2 hover:text-blue-500 transition-colors"
-              >
+              <Link to="/profile" className="flex items-center gap-2 cursor-pointer">
                 <div className="w-8 h-8 rounded-full bg-blue-500 flex items-center justify-center text-white font-bold">
                   {user.name ? user.name.charAt(0).toUpperCase() : user.email ? user.email.charAt(0).toUpperCase() : '?'}
                 </div>
-                
-              </button>
-              <button 
-                onClick={() => navigate('/profile')} 
-                className="flex items-center gap-2 hover:text-blue-500 transition-colors"
-              >
-                Dashboard
-              </button>
-              
-
-              {/* Logout */}
-              <button
-  onClick={handleLogout}
-  className="flex items-center gap-2 px-4 py-2 rounded-lg border border-red-500 text-red-500 hover:bg-red-500 hover:text-white transition-colors"
->
-  <LogOut size={18} />
-  <span>Logout</span>
-</button>
-              
+                <span>{user.name || user.email}</span>
+              </Link>
+              <button className='p-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-colors cursor-pointer' onClick={handleLogout}>Logout</button>
             </>
           ) : (
             <>
               <Link to="/login" className='p-2 text-gray-500 font-bold rounded-lg hover:text-blue-600 transition-colors'>Login</Link>
               <button 
-                className='p-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors' 
+                className='p-2 bg-green-900 text-white rounded-lg hover:bg-green-800 transition-colors'
                 onClick={handleRegister}
               >
                 Register
