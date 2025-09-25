@@ -55,12 +55,12 @@ function HouseDetails() {
 
   return (
     <div className="min-h-screen bg-gray-50 p-6">
-      <Link to="/" className="text-blue-600 underline">
+      <Link to="/dashboard" className="text-blue-600 underline">
         ← Back to listings
       </Link>
 
-      <div className="flex gap-6 mt-6 bg-white rounded-lg shadow-md p-6">
-        <div className="w-1/2">
+      <div className="md:flex gap-6 mt-6 bg-white rounded-lg shadow-md p-6">
+        <div className="md:w-1/2">
           {/* Main Image */}
           <div className="mb-4">
             <img
@@ -72,14 +72,14 @@ function HouseDetails() {
           </div>
 
           {/* Thumbnails */}
-          <div className="grid grid-cols-3 md:grid-cols-4 gap-4">
+          <div className="grid grid-cols-[repeat(auto-fit,minmax(80px,1fr))] md:grid-cols-4 gap-4">
             {allImages.slice(1).map((img, index) => (
               <img
                 key={index + 1}
                 src={img}
                 alt={`${house.title} ${index + 1}`}
                 onClick={() => setCurrentIndex(index + 1)}
-                className="h-32 w-full object-cover rounded-md cursor-pointer hover:opacity-90"
+                className="h-32 w-32 object-cover rounded-md cursor-pointer hover:opacity-90"
               />
             ))}
           </div>
