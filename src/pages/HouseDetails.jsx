@@ -1,11 +1,11 @@
 import React, { useState } from "react";
 import { useParams, Link, Navigate } from "react-router-dom";
-import { useAuth } from "../context/AuthContext"; // import auth context
+import { useAuth } from "../context/AuthContext"; 
 import houses from "../data/houses.json";
 
 function HouseDetails() {
   const { id } = useParams();
-  const { user } = useAuth(); // get logged-in user
+  const { user } = useAuth(); 
   const house = houses.find((h) => h.id === parseInt(id));
   const [currentIndex, setCurrentIndex] = useState(null);
 
