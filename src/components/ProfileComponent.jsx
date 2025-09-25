@@ -35,7 +35,7 @@ const ProfileComponent = () => {
           </div>
           <div className="flex justify-between">
             <span className="text-gray-600">Member since:</span>
-            <span>{user?.createdAt || new Date().toLocaleDateString()}</span>
+            <span>{user?.createdAt ? new Date(user.createdAt).toLocaleString() : new Date().toLocaleString()}</span>
           </div>
         </div>
       </div>
