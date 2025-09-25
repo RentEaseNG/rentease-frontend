@@ -9,6 +9,9 @@ const ProfileComponent = () => {
     if (!user || !user.name) return '?';
     return user.name.charAt(0).toUpperCase();
   };
+   if (!user) {
+    return <Navigate to="/login" replace />;
+  }
 
   return (
     <div>

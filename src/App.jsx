@@ -9,6 +9,7 @@ import { AuthProvider } from './context/AuthContext';
 import ProtectedRoute from './components/ProtectedRoute';
 import ProfileComponent from './components/ProfileComponent';
 import Footer from './components/Footer';
+import HouseDetails from './pages/HouseDetails';
 
 function App() {
 
@@ -26,6 +27,7 @@ function App() {
             </ProtectedRoute>
           } />
           <Route path="/details" element={<ProfileComponent />} />
+          <Route path="/house/:id" element={<HouseDetails />} />
         </Routes>
         <Footer/>
       </Router>
