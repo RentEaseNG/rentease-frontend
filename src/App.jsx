@@ -10,6 +10,8 @@ import ProtectedRoute from './components/ProtectedRoute';
 import ProfileComponent from './components/ProfileComponent';
 import Footer from './components/Footer';
 import HouseDetails from './pages/HouseDetails';
+import Dashboard from './pages/Dashboard';
+import ScrollToTop from './components/ScrollToTop';
 
 function App() {
 
@@ -17,6 +19,7 @@ function App() {
     <AuthProvider>
       <Router>
         <Navbar />
+        <ScrollToTop />
         <Routes>
           <Route path="/" element={<Homepage />} />
           <Route path="/register" element={<Register />} />
@@ -24,6 +27,11 @@ function App() {
           <Route path="/profile" element={
             <ProtectedRoute>
               <Profile />
+            </ProtectedRoute>
+          } />
+          <Route path="/dashboard" element={
+            <ProtectedRoute>
+              <Dashboard />
             </ProtectedRoute>
           } />
           <Route path="/details" element={<ProfileComponent />} />

@@ -49,7 +49,7 @@ const LoginForm = () => {
           
           // Navigate to profile page
           setTimeout(() => {
-            navigate('/profile');
+            navigate('/dashboard');
           }, 1000);
     
           // optionally clear form
@@ -108,13 +108,13 @@ const LoginForm = () => {
       <div className="flex items-center justify-between">
         <button 
           type="submit"
-          className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded 
+          className="bg-green-900 hover:bg-green-800 text-white font-bold py-2 px-4 rounded 
                      focus:outline-none focus:shadow-outline w-full"
         >
           Login
         </button>
       </div>
-      <p>Don't have an account? <Link to="/register" className="text-blue-500">Register here</Link></p>
+      <p>Don't have an account? <Link to="/register" className="text-green-500">Register here</Link></p>
     </form>
   )
 }
