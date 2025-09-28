@@ -3,6 +3,7 @@ import { useParams, Link, Navigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import houses from "../data/houses.json";
 import axios from "axios";
+import PropertyReview from "../components/PropertyReview";
 
 function HouseDetails() {
   const [house, setHouse] = useState(null);
@@ -49,7 +50,6 @@ function HouseDetails() {
       </div>
     );
   }
-  
   // 🔒 Block guests
   if (!user) {
    return <Navigate to="/login" replace />;
@@ -147,7 +147,7 @@ function HouseDetails() {
         {/* Details */}
         <div className="md:w-1/2">
           <h1 className="text-2xl font-bold">{house.title}</h1>
-          <p className="text-green-600 font-bold text-lg">{house.price}</p>
+          <p className="text-green-600 font-bold text-lg">₦{house.price?.toLocaleString()}</p>
           <p className="text-gray-700 mt-2">{house.location}</p>
           <p className="text-gray-600 mt-1">
             <strong>Type:</strong> {house.apartmentType?.name || "N/A"}
@@ -173,7 +173,7 @@ function HouseDetails() {
 
           <div className="mt-6">
             <a
-              href={house.landlord?.email || "#"}
+              href={`mailto:${house.landlord?.email || '#'}`}
               target="_blank"
               rel="noopener noreferrer"
               className="inline-block bg-green-900 text-white px-6 py-3 rounded-lg font-bold hover:bg-green-800 transition"
@@ -183,6 +183,7 @@ function HouseDetails() {
           </div>
         </div>
       </div>
+      <PropertyReview />
     </div>
   );
 }

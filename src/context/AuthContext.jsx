@@ -32,7 +32,6 @@ export const AuthProvider = ({ children }) => {
 
       if (response.ok) {
         const userData = await response.json();
-        console.log(userData)
         setUser(userData.data);
       } else {
         // If token is invalid, clear it

@@ -6,7 +6,8 @@ const LandingHero = ({ onSearch }) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (onSearch) onSearch(query); // send query up to parent
+    if (onSearch)
+      onSearch(query); // send query up to parent
   };
 
   return (
@@ -32,7 +33,7 @@ const LandingHero = ({ onSearch }) => {
 
         {/* Search Bar */}
         <div className="mt-10 max-w-2xl mx-auto w-full">
-          <form className="flex w-full items-center rounded-full bg-white/90 shadow-2xl backdrop-blur-sm p-2">
+          <form className="flex w-full items-center rounded-full bg-white/90 shadow-2xl backdrop-blur-sm p-2" onSubmit={handleSubmit}>
             <div className="md:flex hidden flex-shrink-0 pl-4 pr-2">
               <span className="text-gray-500">
                 <Search />
@@ -45,6 +46,7 @@ const LandingHero = ({ onSearch }) => {
               placeholder="Search by city, area, or property type"
               type="text"
               value={query}
+              name="search"
               onChange={(e) => setQuery(e.target.value)}
             />
 
@@ -55,7 +57,7 @@ const LandingHero = ({ onSearch }) => {
             >
               Search
             </button>
-            <button type="submit" className="flex md:hidden flex-shrink-0 pl-4 pr-2">
+            <button type="search" className="flex md:hidden flex-shrink-0 pl-4 pr-2">
               <span className="text-gray-500">
                 <Search />
               </span>

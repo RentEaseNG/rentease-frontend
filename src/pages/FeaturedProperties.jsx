@@ -13,7 +13,6 @@ function FeaturedProperties({ query }) {
     const fetchHouses = async () => {
       try {
         const res = await axios.get("http://localhost:5000/api/properties");
-        console.log(res.data.data);
         setHouses(res.data.data || []); // ✅ store API response in state
       } catch (err) {
         console.error("Error fetching houses:", err);
@@ -25,13 +24,14 @@ function FeaturedProperties({ query }) {
     fetchHouses();
   }, []);
 
+  // 🔎 Client-side filtering
   const filteredHouses = houses.filter((house) => {
     if (!query) return true;
     const q = query.toLowerCase();
     return (
       house.title.toLowerCase().includes(q) ||
       house.location.toLowerCase().includes(q) ||
-      house.type.toLowerCase().includes(q)
+      house.apartmentType?.name.toLowerCase().includes(q)
     );
   });
 
@@ -70,10 +70,10 @@ function FeaturedProperties({ query }) {
               />
               <div className="p-4">
                 <h2 className="font-semibold text-lg">{house.title}</h2>
-                <p className="text-green-600 font-bold mt-1">{house.price}</p>
+                <p className="text-green-600 font-bold mt-1">₦{house.price?.toLocaleString()}</p>
                 <p className="text-gray-500 text-sm">{house.location}</p>
                 <p className="text-gray-600 text-sm mt-2 w-fit pl-2 pr-2 rounded-sm bg-gray-200 ml-auto">
-                  {house?.apartmentType?.name ?? "self contained"}
+                  {house?.apartmentType?.name}
                 </p>
               </div>
             </div>
