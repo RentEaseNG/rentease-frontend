@@ -2,40 +2,28 @@ import React, { useState, useEffect } from "react";
 import { useParams, Link, Navigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import houses from "../data/houses.json";
+import axios from "axios";
 
 function HouseDetails() {
-  const { id } = useParams();
-  const { user } = useAuth();
-  const house = houses.find((h) => h.id === parseInt(id));
+  const [house, setHouse] = useState(null);
   const [currentIndex, setCurrentIndex] = useState(null);
 
-  // 🔒 Block guests
-  if (!user) {
-    return <Navigate to="/login" replace />;
-  }
+  const { id } = useParams();
+  const { user, loading } = useAuth();
 
-  if (!house) {
-    return (
-      <div className="p-6">
-        <p>House not found.</p>
-        <Link to="/" className="text-blue-600 underline">
-          Back to listings
-        </Link>
-      </div>
-    );
-  }
-
-  // all images (main + extras)
-  const allImages = [house.image, ...(house.images || [])];
-
-  // navigation
-  const handlePrev = () => {
-    setCurrentIndex((prev) => (prev === 0 ? allImages.length - 1 : prev - 1));
-  };
-  const handleNext = () => {
-    setCurrentIndex((prev) => (prev === allImages.length - 1 ? 0 : prev + 1));
-  };
-
+  useEffect(() => {
+    const fetchHouseDetails = async () => {
+      try {
+        const response = await axios.get(`http://localhost:5000/api/properties/${id}`);
+        const res = response.data.data
+        setHouse(res)
+      } catch (error) {
+        console.error("Error fetching house details:", error);
+      }
+    };
+    fetchHouseDetails();
+  }, [id]);
+  
   useEffect(() => {
     if (currentIndex === null) return; // lightbox closed → skip
 
@@ -52,6 +40,43 @@ function HouseDetails() {
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, [currentIndex]); // re-run only when modal opens/closes
+
+  // 🚨 Prevent redirect until auth check is done
+  if (loading) {
+    return (
+      <div className="p-6">
+        <p>Checking authentication...</p>
+      </div>
+    );
+  }
+  
+  // 🔒 Block guests
+  if (!user) {
+   return <Navigate to="/login" replace />;
+  }
+
+  if (!house) {
+    return (
+      <div className="p-6">
+        <p>House not found.</p>
+        <Link to="/" className="text-green-900 underline p-2 rounded-lg">
+          Back to listings
+        </Link>
+      </div>
+    );
+  }
+
+  // all images (main + extras)
+  const allImages = house.images || [];
+
+  // navigation
+  const handlePrev = () => {
+    setCurrentIndex((prev) => (prev === 0 ? allImages.length - 1 : prev - 1));
+  };
+  const handleNext = () => {
+    setCurrentIndex((prev) => (prev === allImages.length - 1 ? 0 : prev + 1));
+  };
+
 
   return (
     <div className="min-h-screen bg-gray-50 p-6">
@@ -125,16 +150,16 @@ function HouseDetails() {
           <p className="text-green-600 font-bold text-lg">{house.price}</p>
           <p className="text-gray-700 mt-2">{house.location}</p>
           <p className="text-gray-600 mt-1">
-            <strong>Type:</strong> {house.type}
+            <strong>Type:</strong> {house.apartmentType?.name || "N/A"}
           </p>
 
           <div className="mt-4 space-y-2">
             <p>
-              <strong>Landlord:</strong> {house.landlord || "N/A"}
+              <strong>Landlord:</strong> {house.landlord?.name || "N/A"}
             </p>
             <p>
               <strong>Address:</strong>{" "}
-              {house.fullAddress || "No full address yet"}
+              {house?.fullAddress || "No full address yet"}
             </p>
             <p>
               <strong>Details:</strong>{" "}
@@ -142,13 +167,13 @@ function HouseDetails() {
             </p>
             <p>
               <strong>Contact:</strong>{" "}
-              {house.inspectionContact || "No contact available"}
+              {house.landlord?.email || "No contact available"}
             </p>
           </div>
 
           <div className="mt-6">
             <a
-              href={house.appointmentLink || "#"}
+              href={house.landlord?.email || "#"}
               target="_blank"
               rel="noopener noreferrer"
               className="inline-block bg-green-900 text-white px-6 py-3 rounded-lg font-bold hover:bg-green-800 transition"

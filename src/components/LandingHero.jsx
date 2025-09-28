@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { FaSearchLocation } from "react-icons/fa";
+import { Search } from "lucide-react";
 
 const LandingHero = ({ onSearch }) => {
   const [query, setQuery] = useState("");
@@ -35,7 +35,7 @@ const LandingHero = ({ onSearch }) => {
           <form className="flex w-full items-center rounded-full bg-white/90 shadow-2xl backdrop-blur-sm p-2">
             <div className="md:flex hidden flex-shrink-0 pl-4 pr-2">
               <span className="text-gray-500">
-                <FaSearchLocation />
+                <Search />
               </span>
             </div>
 
@@ -57,7 +57,7 @@ const LandingHero = ({ onSearch }) => {
             </button>
             <button type="submit" className="flex md:hidden flex-shrink-0 pl-4 pr-2">
               <span className="text-gray-500">
-                <FaSearchLocation />
+                <Search />
               </span>
             </button>
           </form>
