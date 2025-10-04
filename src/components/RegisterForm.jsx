@@ -48,7 +48,6 @@ const RegisterForm = () => {
 
       setSuccess('✅ Registration successful!');
       setError('');
-      console.log('Server response:', data);
 
       // optionally clear form
       setFormData({

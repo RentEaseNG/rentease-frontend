@@ -42,7 +42,6 @@ const LoginForm = () => {
 
           setSuccess('✅ Login successful!');
           setError('');
-          console.log('Server response:', data);
           
           // Store only token in context
           login(data.data.token);

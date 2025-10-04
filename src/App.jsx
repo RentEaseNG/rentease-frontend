@@ -12,6 +12,7 @@ import Footer from './components/Footer';
 import HouseDetails from './pages/HouseDetails';
 import Dashboard from './pages/Dashboard';
 import ScrollToTop from './components/ScrollToTop';
+import Messages from './pages/Messages';
 
 function App() {
 
@@ -32,6 +33,11 @@ function App() {
           <Route path="/dashboard" element={
             <ProtectedRoute>
               <Dashboard />
+            </ProtectedRoute>
+          } />
+          <Route path="/messages" element={
+            <ProtectedRoute>
+              <Messages />
             </ProtectedRoute>
           } />
           <Route path="/details" element={<ProfileComponent />} />

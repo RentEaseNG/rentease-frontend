@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import axios from "axios";
+import Image from "../components/ImageLoader";
 
 function FeaturedProperties({ query }) {
   const { user } = useAuth();
@@ -63,7 +64,7 @@ function FeaturedProperties({ query }) {
               onClick={() => handleCardClick(house._id)}
               className="cursor-pointer bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition"
             >
-              <img
+              <Image
                 src={house.images[0]}
                 alt={house.title}
                 className="w-full h-40 object-cover"
@@ -72,7 +73,7 @@ function FeaturedProperties({ query }) {
                 <h2 className="font-semibold text-lg">{house.title}</h2>
                 <p className="text-green-600 font-bold mt-1">₦{house.price?.toLocaleString()}</p>
                 <p className="text-gray-500 text-sm">{house.location}</p>
-                <p className="text-gray-600 text-sm mt-2 w-fit pl-2 pr-2 rounded-sm bg-gray-200 ml-auto">
+                <p className="text-gray-600 text-sm mt-2 w-fit px-2 rounded-sm bg-gray-200 ml-auto">
                   {house?.apartmentType?.name}
                 </p>
               </div>
