@@ -4,13 +4,18 @@ import { useAuth } from "../context/AuthContext";
 import houses from "../data/houses.json";
 import axios from "axios";
 import PropertyReview from "../components/PropertyReview";
+import BookApartment from "../components/BookApartment";
+import { MessagesSquare, X } from "lucide-react";
 
 function HouseDetails() {
-  const [house, setHouse] = useState(null);
+  const [house, setHouse] = useState();
   const [currentIndex, setCurrentIndex] = useState(null);
+  const [isChatOpen, setIsChatOpen] = useState(false);
+  const [message, setMessage] = useState("");
+  const [chatMessages, setChatMessages] = useState([]);
 
   const { id } = useParams();
-  const { user, loading } = useAuth();
+  const { user, loading, token } = useAuth();
 
   useEffect(() => {
     const fetchHouseDetails = async () => {
@@ -24,7 +29,7 @@ function HouseDetails() {
     };
     fetchHouseDetails();
   }, [id]);
-  
+
   useEffect(() => {
     if (currentIndex === null) return; // lightbox closed → skip
 
@@ -52,7 +57,7 @@ function HouseDetails() {
   }
   // 🔒 Block guests
   if (!user) {
-   return <Navigate to="/login" replace />;
+    return <Navigate to="/login" replace />;
   }
 
   if (!house) {
@@ -75,6 +80,64 @@ function HouseDetails() {
   };
   const handleNext = () => {
     setCurrentIndex((prev) => (prev === allImages.length - 1 ? 0 : prev + 1));
+  };
+
+  const toggleChat = () => {
+    setIsChatOpen(!isChatOpen);
+  };
+
+  const handleSendMessage = (e) => {
+    e.preventDefault();
+    if (!message.trim()) return;
+
+    // Create the new message object
+    const newMessage = {
+      id: Date.now(),
+      sender: user?.name || user?.email,
+      text: message,
+      timestamp: new Date(),
+      isUser: true
+    };
+
+    // Add message to UI
+    setChatMessages([...chatMessages, newMessage]);
+
+    // Prepare API payload
+    const messagePayload = {
+      propertyId: id,
+      receiverId: house?.landlord?._id,
+      content: message
+    };
+
+    if (!messagePayload.receiverId || !messagePayload.content) {
+      console.error("Receiver ID or message content is missing.");
+      return;
+    }
+
+    axios.post('http://localhost:5000/api/messages', messagePayload, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    })
+      .then(response => {
+        setMessage(""); // clear only after success
+      })
+      .catch(error => {
+        console.error('Error sending message:', error.response?.data || error.message);
+      });
+
+
+    // Simulate landlord response after a short delay (for demo purposes)
+    setTimeout(() => {
+      const landlordResponse = {
+        id: Date.now() + 1,
+        sender: house?.landlord?.name || "Landlord",
+        text: "Thank you for your interest. How can I help you with this property?",
+        timestamp: new Date(),
+        isUser: false
+      };
+      setChatMessages(prevMessages => [...prevMessages, landlordResponse]);
+    }, 1000);
   };
 
 
@@ -170,19 +233,77 @@ function HouseDetails() {
               {house.landlord?.email || "No contact available"}
             </p>
           </div>
+          <div className="cta mt-6 bg-green-100 max-w-fit p-4 rounded">
+            <span
+              className="cursor-pointer flex items-center gap-2 text-green-700 hover:text-green-900"
+              onClick={toggleChat}
+            >
+              <MessagesSquare size={20} />
+              <span>Chat with Landlord</span>
+            </span>
+          </div>
 
           <div className="mt-6">
-            <a
-              href={`mailto:${house.landlord?.email || '#'}`}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-block bg-green-900 text-white px-6 py-3 rounded-lg font-bold hover:bg-green-800 transition"
-            >
-              Book Appartment
-            </a>
+            <BookApartment />
           </div>
         </div>
       </div>
+
+      {/* Chat Popup */}
+      {isChatOpen && (
+        <div className="fixed bottom-4 right-4 w-80 md:w-96 bg-white rounded-lg shadow-xl z-40 flex flex-col" style={{ height: "500px" }}>
+          <div className="bg-green-700 text-white p-3 rounded-t-lg flex justify-between items-center">
+            <h3 className="font-semibold">Chat with {house.landlord?.name || "Landlord"}</h3>
+            <button onClick={toggleChat} className="text-white hover:text-gray-200 cursor-pointer">
+              <X size={20} />
+            </button>
+          </div>
+
+          <div className="flex-1 p-3 overflow-y-auto bg-gray-50">
+            {chatMessages.length === 0 ? (
+              <div className="text-center text-gray-500 mt-4">
+                <p>Start a conversation with the landlord</p>
+              </div>
+            ) : (
+              <div className="space-y-3">
+                {chatMessages.map((msg) => (
+                  <div
+                    key={msg.id}
+                    className={`p-3 rounded-lg max-w-[80%] ${msg.isUser
+                        ? "bg-green-100 ml-auto"
+                        : "bg-gray-200 mr-auto"
+                      }`}
+                  >
+                    <p className="text-sm">{msg.text}</p>
+                    <p className="text-xs text-gray-500 mt-1">
+                      {new Date(msg.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                    </p>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+
+          <form onSubmit={handleSendMessage} className="p-3 border-t">
+            <div className="flex gap-2">
+              <input
+                type="text"
+                value={message}
+                onChange={(e) => setMessage(e.target.value)}
+                placeholder="Type your message..."
+                className="flex-1 p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500"
+              />
+              <button
+                type="submit"
+                className="bg-green-700 text-white px-4 py-2 rounded-lg hover:bg-green-800 cursor-pointer"
+              >
+                Send
+              </button>
+            </div>
+          </form>
+        </div>
+      )}
+
       <PropertyReview />
     </div>
   );

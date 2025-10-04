@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { LogOut } from "lucide-react";
+import { Bell } from "lucide-react";
 
 import { Link, useNavigate } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
@@ -55,8 +55,8 @@ const Navbar = () => {
         <nav className="hidden md:block">
           <ul className='flex gap-6'>
             <li><Link to="/dashboard" className="hover:text-green-900 transition-colors">Dashboard</Link></li>
-            <li><Link to="/services" className="hover:text-green-900 transition-colors">Services</Link></li>
-            <li><Link to="/contact" className="hover:text-green-900 transition-colors">Contact</Link></li>
+            <li><Link to="/services" className="hover:text-green-900 transition-colors">Listings</Link></li>
+            <li><Link to="/messages" className="hover:text-green-900 transition-colors">Messages</Link></li>
           </ul>
         </nav>
 
@@ -66,6 +66,9 @@ const Navbar = () => {
             <span>Loading...</span>
           ) : user ? (
             <>
+              <div className='cursor-pointer text-green-900'>
+                <Bell />
+              </div>
               <Link to="/profile" className="flex items-center gap-2 cursor-pointer">
                 <div className="w-8 h-8 rounded-full bg-blue-500 flex items-center justify-center text-white font-bold">
                   {user.name ? user.name.charAt(0).toUpperCase() : user.email ? user.email.charAt(0).toUpperCase() : '?'}
@@ -94,8 +97,8 @@ const Navbar = () => {
             <ul className='space-y-4'>
               <li><Link to="/" className="block py-2 hover:text-green-900 transition-colors" onClick={toggleMenu}>Home</Link></li>
               <li><Link to="/dashboard" className="block py-2 hover:text-green-900 transition-colors" onClick={toggleMenu}>Dashboard</Link></li>
-              <li><Link to="/services" className="block py-2 hover:text-green-900 transition-colors" onClick={toggleMenu}>Services</Link></li>
-              <li><Link to="/contact" className="block py-2 hover:text-green-900 transition-colors" onClick={toggleMenu}>Contact</Link></li>
+              <li><Link to="/listings" className="block py-2 hover:text-green-900 transition-colors" onClick={toggleMenu}>Listings</Link></li>
+              <li><Link to="/messages" className="block py-2 hover:text-green-900 transition-colors" onClick={toggleMenu}>Messages</Link></li>
             </ul>
 
             <div className="mt-4 pt-4 border-t">
