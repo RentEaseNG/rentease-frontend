@@ -118,9 +118,9 @@ const Navbar = () => {
                 </div>
               ) : (
                 <div className="flex flex-col gap-3">
-                  <Link to="/login" className='p-2  text-gray-500 font-bold rounded-lg text-center hover:text-blue-600 transition-colors' onClick={toggleMenu}>Login</Link>
+                  <Link to="/login" className='border border-green-700 p-2  text-gray-500 font-bold rounded-lg text-center hover:text-green-900 transition-colors' onClick={toggleMenu}>Login</Link>
                   <button
-                    className='p-2 bg-blue-600 text-white rounded-lg w-full  hover:bg-blue-700 transition-colors'
+                    className='p-2 bg-green-900 text-white rounded-lg w-full hover:bg-green-800 transition-colors'
                     onClick={() => { handleRegister(); toggleMenu(); }}
                   >
                     Register
