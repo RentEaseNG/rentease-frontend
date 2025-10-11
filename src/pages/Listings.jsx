@@ -1,12 +1,14 @@
 import React from 'react'
 import FeaturedProperties from './FeaturedProperties'
+import AddPropertyButton from '../components/AddPropertyButton'
 
-const Dashboard = () => {
+const Listings = () => {
   return (
     <div>
         <FeaturedProperties />
+        <AddPropertyButton />
     </div>
   )
 }
 
-export default Dashboard
+export default Listings
