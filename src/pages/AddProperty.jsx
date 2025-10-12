@@ -283,7 +283,7 @@ const AddProperty = () => {
           <button
             type="submit"
             disabled={loading}
-            className="cursor-pointer bg-blue-600 text-white px-6 py-3 rounded-md hover:bg-blue-700 disabled:bg-blue-300"
+            className="cursor-pointer bg-green-600 text-white px-6 py-3 rounded-md hover:bg-green-700 disabled:bg-blue-300"
           >
             {loading ? 'Listing Property...' : 'List Property'}
           </button>

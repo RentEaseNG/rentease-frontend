@@ -14,6 +14,7 @@ import ScrollToTop from './components/ScrollToTop';
 import Messages from './pages/Messages';
 import AddProperty from './pages/AddProperty';
 import Listings from './pages/Listings';
+import Dashboard from './pages/Dashboard';
 
 function App() {
 
@@ -25,12 +26,17 @@ function App() {
         <Routes>
           <Route path="/" element={<Homepage />} />
           <Route path="/register" element={<Register />} />
-          <Route path="/login" element={<Login />} />
+          <Route path="/dashboard" element={
+            <ProtectedRoute>
+              <Dashboard />
+            </ProtectedRoute>
+          } />
           <Route path="/profile" element={
             <ProtectedRoute>
               <Profile />
             </ProtectedRoute>
           } />
+          <Route path="/login" element={<Login />} />
           <Route path="/listings" element={
             <ProtectedRoute>
               <Listings />
