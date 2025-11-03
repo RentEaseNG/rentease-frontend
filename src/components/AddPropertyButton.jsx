@@ -14,7 +14,7 @@ const AddPropertyButton = () => {
     }
 
   return (
-    <div className='bg-green-600 p-4 rounded-full fixed bottom-4 right-4 cursor-pointer' onClick={addNewHouse}>
+    <div className='bg-green-600 p-4 rounded-full fixed bottom-4 right-4 cursor-pointer' onClick={addNewHouse} title='Add New Property'>
         <Plus className='text-white' />
     </div>
   )

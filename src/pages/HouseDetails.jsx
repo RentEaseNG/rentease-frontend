@@ -64,7 +64,7 @@ function HouseDetails() {
     return (
       <div className="p-6">
         <p>House not found.</p>
-        <Link to="/" className="text-green-900 underline p-2 rounded-lg">
+        <Link to="/listings" className="text-green-900 underline p-2 rounded-lg">
           Back to listings
         </Link>
       </div>
@@ -143,7 +143,7 @@ function HouseDetails() {
 
   return (
     <div className="min-h-screen bg-gray-50 p-6">
-      <Link to="/dashboard" className="text-blue-600 underline">
+      <Link to="/listings" className="text-blue-600 underline">
         ← Back to listings
       </Link>
 
