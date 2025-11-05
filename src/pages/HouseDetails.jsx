@@ -230,7 +230,9 @@ function HouseDetails() {
             </p>
             <p>
               <strong>Contact:</strong>{" "}
-              {house.landlord?.email || "No contact available"}
+              <a href={`mailto:${house.landlord?.email}`} className="text-blue-600 underline">
+                {house.landlord?.email || "No contact available"}
+              </a>
             </p>
           </div>
           <div className="cta mt-6 bg-green-100 max-w-fit p-4 rounded">
