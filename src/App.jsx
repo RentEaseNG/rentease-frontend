@@ -10,9 +10,11 @@ import ProtectedRoute from './components/ProtectedRoute';
 import ProfileComponent from './components/ProfileComponent';
 import Footer from './components/Footer';
 import HouseDetails from './pages/HouseDetails';
-import Dashboard from './pages/Dashboard';
 import ScrollToTop from './components/ScrollToTop';
 import Messages from './pages/Messages';
+import AddProperty from './pages/AddProperty';
+import Listings from './pages/Listings';
+import Dashboard from './pages/Dashboard';
 
 function App() {
 
@@ -24,20 +26,30 @@ function App() {
         <Routes>
           <Route path="/" element={<Homepage />} />
           <Route path="/register" element={<Register />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/profile" element={
-            <ProtectedRoute>
-              <Profile />
-            </ProtectedRoute>
-          } />
           <Route path="/dashboard" element={
             <ProtectedRoute>
               <Dashboard />
             </ProtectedRoute>
           } />
+          <Route path="/profile" element={
+            <ProtectedRoute>
+              <Profile />
+            </ProtectedRoute>
+          } />
+          <Route path="/login" element={<Login />} />
+          <Route path="/listings" element={
+            <ProtectedRoute>
+              <Listings />
+            </ProtectedRoute>
+          } />
           <Route path="/messages" element={
             <ProtectedRoute>
               <Messages />
+            </ProtectedRoute>
+          } />
+          <Route path="/new" element={
+            <ProtectedRoute>
+              <AddProperty />
             </ProtectedRoute>
           } />
           <Route path="/details" element={<ProfileComponent />} />

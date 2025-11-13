@@ -55,7 +55,7 @@ const Navbar = () => {
         <nav className="hidden md:block">
           <ul className='flex gap-6'>
             <li><Link to="/dashboard" className="hover:text-green-900 transition-colors">Dashboard</Link></li>
-            <li><Link to="/services" className="hover:text-green-900 transition-colors">Listings</Link></li>
+            <li><Link to="/listings" className="hover:text-green-900 transition-colors">Listings</Link></li>
             <li><Link to="/messages" className="hover:text-green-900 transition-colors">Messages</Link></li>
           </ul>
         </nav>
@@ -99,6 +99,8 @@ const Navbar = () => {
               <li><Link to="/dashboard" className="block py-2 hover:text-green-900 transition-colors" onClick={toggleMenu}>Dashboard</Link></li>
               <li><Link to="/listings" className="block py-2 hover:text-green-900 transition-colors" onClick={toggleMenu}>Listings</Link></li>
               <li><Link to="/messages" className="block py-2 hover:text-green-900 transition-colors" onClick={toggleMenu}>Messages</Link></li>
+              
+              
             </ul>
 
             <div className="mt-4 pt-4 border-t">
