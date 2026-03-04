@@ -246,7 +246,7 @@ function HouseDetails() {
           </div>
 
           <div className="mt-6">
-            <BookApartment />
+            <BookApartment propertyId={id} />
           </div>
         </div>
       </div>
@@ -272,8 +272,8 @@ function HouseDetails() {
                   <div
                     key={msg.id}
                     className={`p-3 rounded-lg max-w-[80%] ${msg.isUser
-                        ? "bg-green-100 ml-auto"
-                        : "bg-gray-200 mr-auto"
+                      ? "bg-green-100 ml-auto"
+                      : "bg-gray-200 mr-auto"
                       }`}
                   >
                     <p className="text-sm">{msg.text}</p>

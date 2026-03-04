@@ -3,11 +3,15 @@ import { Bell } from "lucide-react";
 
 import { Link, useNavigate } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
+import { useNotification } from '../context/NotificationContext'
+import NotificationPanel from './NotificationPanel'
 
 const Navbar = () => {
   const navigate = useNavigate();
   const { user, logout, loading } = useAuth();
+  const { unreadCount } = useNotification();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [showNotifications, setShowNotifications] = useState(false);
 
   const handleRegister = () => {
     navigate('/register');
@@ -15,7 +19,7 @@ const Navbar = () => {
 
   const handleLogout = () => {
     logout();
-    navigate('/');
+    navigate('/')
   }
 
   const toggleMenu = () => {
@@ -57,6 +61,13 @@ const Navbar = () => {
             <li><Link to="/dashboard" className="hover:text-green-900 transition-colors">Dashboard</Link></li>
             <li><Link to="/listings" className="hover:text-green-900 transition-colors">Listings</Link></li>
             <li><Link to="/messages" className="hover:text-green-900 transition-colors">Messages</Link></li>
+            {user?.role === 'Admin' && (
+              <li>
+                <Link to="/admin" className="flex items-center gap-1 text-purple-700 font-semibold hover:text-purple-900 transition-colors">
+                  Admin
+                </Link>
+              </li>
+            )}
           </ul>
         </nav>
 
@@ -66,9 +77,25 @@ const Navbar = () => {
             <span>Loading...</span>
           ) : user ? (
             <>
-              <div className='cursor-pointer text-green-900'>
-                <Bell />
+              {/* Bell with badge + dropdown */}
+              <div className="relative">
+                <button
+                  onClick={() => setShowNotifications(prev => !prev)}
+                  className="relative cursor-pointer text-green-900 p-1 rounded-full hover:bg-green-50 transition-colors"
+                  aria-label="Notifications"
+                >
+                  <Bell size={22} />
+                  {unreadCount > 0 && (
+                    <span className="absolute -top-1 -right-1 min-w-[18px] h-[18px] bg-red-500 text-white text-[10px] font-bold rounded-full flex items-center justify-center px-1 leading-none">
+                      {unreadCount > 99 ? '99+' : unreadCount}
+                    </span>
+                  )}
+                </button>
+                {showNotifications && (
+                  <NotificationPanel onClose={() => setShowNotifications(false)} />
+                )}
               </div>
+
               <Link to="/profile" className="flex items-center gap-2 cursor-pointer">
                 <div className="w-8 h-8 rounded-full bg-blue-500 flex items-center justify-center text-white font-bold">
                   {user.name ? user.name.charAt(0).toUpperCase() : user.email ? user.email.charAt(0).toUpperCase() : '?'}
@@ -99,8 +126,19 @@ const Navbar = () => {
               <li><Link to="/dashboard" className="block py-2 hover:text-green-900 transition-colors" onClick={toggleMenu}>Dashboard</Link></li>
               <li><Link to="/listings" className="block py-2 hover:text-green-900 transition-colors" onClick={toggleMenu}>Listings</Link></li>
               <li><Link to="/messages" className="block py-2 hover:text-green-900 transition-colors" onClick={toggleMenu}>Messages</Link></li>
-              
-              
+              <li><Link to="/notifications" className="flex items-center gap-2 py-2 hover:text-green-900 transition-colors" onClick={toggleMenu}>
+                Notifications
+                {unreadCount > 0 && (
+                  <span className="bg-red-500 text-white text-xs font-bold px-1.5 py-0.5 rounded-full">{unreadCount}</span>
+                )}
+              </Link></li>
+              {user?.role === 'Admin' && (
+                <li>
+                  <Link to="/admin" className="block py-2 text-purple-700 font-semibold hover:text-purple-900 transition-colors" onClick={toggleMenu}>
+                    Admin Panel
+                  </Link>
+                </li>
+              )}
             </ul>
 
             <div className="mt-4 pt-4 border-t">

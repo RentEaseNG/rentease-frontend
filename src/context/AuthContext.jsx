@@ -57,8 +57,14 @@ export const AuthProvider = ({ children }) => {
     localStorage.removeItem('token');
   };
 
+  // Re-fetch user data without triggering a full login flow
+  const refreshUser = () => {
+    const storedToken = token || localStorage.getItem('token');
+    if (storedToken) fetchUserData(storedToken);
+  };
+
   return (
-    <AuthContext.Provider value={{ user, token, login, logout, loading }}>
+    <AuthContext.Provider value={{ user, token, login, logout, loading, refreshUser }}>
       {children}
     </AuthContext.Provider>
   );

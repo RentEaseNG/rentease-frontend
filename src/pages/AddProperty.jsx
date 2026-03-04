@@ -2,6 +2,7 @@ import axios from 'axios';
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import CloudinaryUploader from '../components/CloudinaryUploader';
 
 const AddProperty = () => {
   const navigate = useNavigate();
@@ -16,7 +17,7 @@ const AddProperty = () => {
     images: []
   });
 
-  const [imageUrls, setImageUrls] = useState(['']);
+
   const [apartmentTypes, setApartmentTypes] = useState([]); // 👈 Store fetched types
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
@@ -52,48 +53,9 @@ const AddProperty = () => {
     });
   };
 
-  // Handle image input change
-  const handleImageChange = (index, value) => {
-    const newImageUrls = [...imageUrls];
-    newImageUrls[index] = value;
-    setImageUrls(newImageUrls);
-    setFormData({
-      ...formData,
-      images: newImageUrls.filter((url) => url.trim() !== '')
-    });
-  };
-
-  // Image preview helper
-  const getImagePreview = (url) => {
-    if (!url || url.trim() === '') return null;
-    return (
-      <div className="mt-2">
-        <img
-          src={url}
-          alt="Property preview"
-          className="h-24 w-auto object-cover rounded-md border border-gray-300"
-          onError={(e) => {
-            e.target.onerror = null;
-            e.target.src =
-              'https://via.placeholder.com/150?text=Invalid+Image+URL';
-          }}
-        />
-      </div>
-    );
-  };
-
-  const addImageField = () => {
-    setImageUrls([...imageUrls, '']);
-  };
-
-  const removeImageField = (index) => {
-    const newImageUrls = [...imageUrls];
-    newImageUrls.splice(index, 1);
-    setImageUrls(newImageUrls);
-    setFormData({
-      ...formData,
-      images: newImageUrls.filter((url) => url.trim() !== '')
-    });
+  // Handle image list changes from CloudinaryUploader
+  const handleImagesChange = (urls) => {
+    setFormData((prev) => ({ ...prev, images: urls }));
   };
 
   // Validate before submit
@@ -103,7 +65,7 @@ const AddProperty = () => {
     if (!formData.price || formData.price <= 0) return setError('Please enter a valid price'), false;
     if (!formData.location.trim()) return setError('Property location is required'), false;
     if (!formData.apartmentType.trim()) return setError('Please select an apartment type'), false;
-    if (formData.images.length === 0) return setError('At least one image URL is required'), false;
+    if (formData.images.length === 0) return setError('Please upload at least one image'), false;
     return true;
   };
 
@@ -193,7 +155,7 @@ const AddProperty = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div>
             <label className="block text-gray-700 font-medium mb-2">
-              Price (per month)
+              Price (per year)
             </label>
             <input
               type="number"
@@ -201,7 +163,7 @@ const AddProperty = () => {
               value={formData.price}
               onChange={handleChange}
               className="w-full px-4 py-2 border border-green-600 rounded-md focus:outline-none focus:ring-2 focus:ring-green-800"
-              placeholder="500"
+              placeholder="e.g. 500000"
               required
             />
           </div>
@@ -246,36 +208,10 @@ const AddProperty = () => {
         {/* Images */}
         <div>
           <label className="block text-gray-700 font-medium mb-2">Images</label>
-          <div className="space-y-3">
-            {imageUrls.map((url, index) => (
-              <div key={index} className="flex items-center space-x-2">
-                <input
-                  type="text"
-                  value={url}
-                  onChange={(e) => handleImageChange(index, e.target.value)}
-                  className="flex-1 px-4 py-2 border border-green-600 rounded-md focus:outline-none focus:ring-2 focus:ring-green-800"
-                  placeholder="https://example.com/image.jpg"
-                />
-                {getImagePreview(url)}
-                {index > 0 && (
-                  <button
-                    type="button"
-                    onClick={() => removeImageField(index)}
-                    className="bg-red-500 text-white px-3 py-2 rounded-md hover:bg-red-600 cursor-pointer"
-                  >
-                    Remove
-                  </button>
-                )}
-              </div>
-            ))}
-            <button
-              type="button"
-              onClick={addImageField}
-              className="bg-gray-200 text-gray-800 px-4 py-2 rounded-md hover:bg-gray-300 cursor-pointer"
-            >
-              Add Another Image
-            </button>
-          </div>
+          <CloudinaryUploader
+            value={formData.images}
+            onChange={handleImagesChange}
+          />
         </div>
 
         {/* Submit */}
