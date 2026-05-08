@@ -1,4 +1,4 @@
-import axios from 'axios';
+import apiClient from '../api/client';
 import React, { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import ReviewForm from './ReviewForm';
@@ -13,7 +13,7 @@ const PropertyReview = () => {
 
     const fetchHouseReviews = async () => {
         try {
-            const response = await axios.get(`http://localhost:5000/api/reviews/${id}`);
+            const response = await apiClient.get(`/reviews/${id}`);
             const res = response.data.data
             setReviews(res)
         } catch (error) {
@@ -33,9 +33,7 @@ const PropertyReview = () => {
     const handleDelete = async (reviewId) => {
         if (!window.confirm('Are you sure you want to delete your review?')) return;
         try {
-            await axios.delete(`http://localhost:5000/api/reviews/${reviewId}`, {
-                headers: { Authorization: `Bearer ${token}` }
-            });
+            await apiClient.delete(`/reviews/${reviewId}`);
             fetchHouseReviews();
         } catch (error) {
             console.error("Error deleting review:", error);

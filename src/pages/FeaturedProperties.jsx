@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
-import axios from "axios";
-import Image from "../components/ImageLoader";
+import apiClient from "../api/client";
+import PropertyCard from "../components/PropertyCard";
 
 function FeaturedProperties({ query }) {
   const { user } = useAuth();
@@ -13,7 +13,7 @@ function FeaturedProperties({ query }) {
   useEffect(() => {
     const fetchHouses = async () => {
       try {
-        const res = await axios.get("http://localhost:5000/api/properties");
+        const res = await apiClient.get("/properties");
         setHouses(res.data.data || []); // ✅ store API response in state
       } catch (err) {
         console.error("Error fetching houses:", err);
@@ -45,7 +45,11 @@ function FeaturedProperties({ query }) {
   };
 
   if (loading) {
-    return <div className="p-6 text-gray-600">Loading properties...</div>;
+    return (
+      <div className="flex justify-center items-center py-20">
+        <div className="animate-spin rounded-full h-10 w-10 border-t-2 border-b-2 border-blue-500"></div>
+      </div>
+    );
   }
 
   return (
@@ -59,25 +63,11 @@ function FeaturedProperties({ query }) {
       ) : (
         <div className="grid gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
           {filteredHouses.map((house) => (
-            <div
+            <PropertyCard
               key={house._id}
-              onClick={() => handleCardClick(house._id)}
-              className="cursor-pointer bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition"
-            >
-              <Image
-                src={house.images[0]}
-                alt={house.title}
-                className="w-full h-40 object-cover"
-              />
-              <div className="p-4">
-                <h2 className="font-semibold text-lg">{house.title}</h2>
-                <p className="text-green-600 font-bold mt-1">₦{house.price?.toLocaleString()}</p>
-                <p className="text-gray-500 text-sm">{house.location}</p>
-                <p className="text-gray-600 text-sm mt-2 w-fit px-2 rounded-sm bg-gray-200 ml-auto">
-                  {house?.apartmentType?.name}
-                </p>
-              </div>
-            </div>
+              house={house}
+              onClick={handleCardClick}
+            />
           ))}
         </div>
       )}

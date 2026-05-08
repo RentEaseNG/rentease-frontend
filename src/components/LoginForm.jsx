@@ -1,6 +1,7 @@
 import React, {useState} from 'react'
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import apiClient from '../api/client';
 
 const LoginForm = () => {
     const navigate = useNavigate();
@@ -23,22 +24,12 @@ const LoginForm = () => {
         e.preventDefault();
     
         try {
-          const response = await fetch('http://localhost:5000/api/auth/login', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-              email: formData.email,
-              password: formData.password
-            })
+          const response = await apiClient.post('/auth/login', {
+            email: formData.email,
+            password: formData.password
           });
     
-          const data = await response.json();
-    
-          if (!response.ok) {
-            throw new Error(data.message || 'Login failed');
-          }
+          const data = response.data;
 
           setSuccess('✅ Login successful!');
           setError('');
@@ -58,7 +49,7 @@ const LoginForm = () => {
           });
     
         } catch (err) {
-          setError(err.message);
+          setError(err.response?.data?.message || err.message);
           setSuccess('');
         }
       };

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import axios from "axios";
+import apiClient from "../api/client";
 import { useAuth } from "../context/AuthContext";
 import BookingCard from "../components/BookingCard";
 import { CalendarX } from "lucide-react";
@@ -16,9 +16,7 @@ const MyBookings = () => {
     useEffect(() => {
         const fetch = async () => {
             try {
-                const res = await axios.get("http://localhost:5000/api/bookings/my", {
-                    headers: { Authorization: `Bearer ${token}` },
-                });
+                const res = await apiClient.get("/bookings/my");
                 setBookings(res.data.data || []);
             } catch (err) {
                 setError("Failed to load bookings. Please try again.");

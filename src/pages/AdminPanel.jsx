@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import axios from "axios";
+import apiClient from "../api/client";
 import { useAuth } from "../context/AuthContext";
 import AdminStats from "../components/admin/AdminStats";
 import AdminUsersTab from "../components/admin/AdminUsersTab";
@@ -21,10 +21,8 @@ const AdminPanel = () => {
     const [statsLoading, setStatsLoading] = useState(true);
 
     useEffect(() => {
-        axios
-            .get("http://localhost:5000/api/dashboard/admin-overview", {
-                headers: { Authorization: `Bearer ${token}` },
-            })
+        apiClient
+            .get("/dashboard/admin-overview")
             .then((res) => setStats(res.data.data))
             .catch(console.error)
             .finally(() => setStatsLoading(false));

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import axios from "axios";
+import apiClient from "../../api/client";
 import { useAuth } from "../../context/AuthContext";
 import { Trash2 } from "lucide-react";
 
@@ -10,10 +10,8 @@ const AdminPropertiesTab = () => {
     const [deleting, setDeleting] = useState(null);
 
     useEffect(() => {
-        axios
-            .get("http://localhost:5000/api/properties", {
-                headers: { Authorization: `Bearer ${token}` },
-            })
+        apiClient
+            .get("/properties")
             .then((res) => setProperties(res.data.data || []))
             .catch(console.error)
             .finally(() => setLoading(false));
@@ -23,9 +21,7 @@ const AdminPropertiesTab = () => {
         if (!window.confirm("Delete this property? This cannot be undone.")) return;
         setDeleting(id);
         try {
-            await axios.delete(`http://localhost:5000/api/properties/${id}`, {
-                headers: { Authorization: `Bearer ${token}` },
-            });
+            await apiClient.delete(`/properties/${id}`);
             setProperties((prev) => prev.filter((p) => p._id !== id));
         } catch (err) {
             console.error("Delete failed:", err);

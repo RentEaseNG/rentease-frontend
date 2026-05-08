@@ -1,4 +1,4 @@
-import axios from 'axios'
+import apiClient from '../api/client'
 import React, { useEffect, useState } from 'react'
 import { useAuth } from '../context/AuthContext'
 import { Link } from 'react-router-dom'
@@ -10,12 +10,7 @@ const DashboardBookedProperties = () => {
     useEffect(() => {
         const fetchBookings = async () => {
             try {
-                const res = await axios.get("http://localhost:5000/api/bookings/my", {
-                    headers: {
-                        "Content-Type": "application/json",
-                        Authorization: `Bearer ${token}`,
-                    },
-                })
+                const res = await apiClient.get("/bookings/my")
                 setBookedProperties(res.data?.data?.length ?? 0)
             } catch (error) {
                 console.error("error", error)

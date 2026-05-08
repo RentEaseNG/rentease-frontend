@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { LogOut, Pencil, Lock, Check, X, Eye, EyeOff, Phone, Mail, User, ShieldCheck } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
+import apiClient from '../api/client';
 
 // ─── Role badge ───────────────────────────────────────────────────────────────
 const ROLE_STYLES = {
@@ -35,10 +35,9 @@ const EditProfileSection = ({ user, token, onUpdated }) => {
     setSaving(true);
     setBanner(null);
     try {
-      const res = await axios.patch(
-        'http://localhost:5000/api/users/me',
-        { name: name.trim(), phoneNumber: phone.trim() },
-        { headers: { Authorization: `Bearer ${token}` } }
+      const res = await apiClient.patch(
+        '/users/me',
+        { name: name.trim(), phoneNumber: phone.trim() }
       );
       onUpdated(res.data.data);
       setBanner({ type: 'success', msg: 'Profile updated!' });
@@ -144,10 +143,9 @@ const ChangePasswordSection = ({ token }) => {
     setSaving(true);
     setBanner(null);
     try {
-      await axios.put(
-        'http://localhost:5000/api/users/me/password',
-        { currentPassword: current, newPassword: next },
-        { headers: { Authorization: `Bearer ${token}` } }
+      await apiClient.put(
+        '/users/me/password',
+        { currentPassword: current, newPassword: next }
       );
       setBanner({ type: 'success', msg: 'Password changed successfully!' });
       setCurrent(''); setNext(''); setConfirm('');

@@ -7,7 +7,7 @@ import {
 } from 'lucide-react';
 import { useNotification } from '../context/NotificationContext';
 import { useAuth } from '../context/AuthContext';
-import axios from 'axios';
+import apiClient from '../api/client';
 
 const TYPE_CONFIG = {
     booking: { icon: CalendarCheck, color: 'text-green-600', bg: 'bg-green-50', label: 'Booking' },
@@ -51,9 +51,8 @@ const Notifications = () => {
         if (!token) return;
         if (p === 1) setLoading(true); else setLoadingMore(true);
         try {
-            const res = await axios.get(
-                `http://localhost:5000/api/notifications?${buildQuery(p, f)}`,
-                { headers: { Authorization: `Bearer ${token}` } }
+            const res = await apiClient.get(
+                `/notifications?${buildQuery(p, f)}`
             );
             const fetched = res.data.data?.notifications ?? [];
             setItems(prev => reset || p === 1 ? fetched : [...prev, ...fetched]);

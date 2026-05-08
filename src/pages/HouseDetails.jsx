@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useParams, Link, Navigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
-import houses from "../data/houses.json";
-import axios from "axios";
+import apiClient from "../api/client";
 import PropertyReview from "../components/PropertyReview";
 import BookApartment from "../components/BookApartment";
 import { MessagesSquare, X } from "lucide-react";
@@ -20,7 +19,7 @@ function HouseDetails() {
   useEffect(() => {
     const fetchHouseDetails = async () => {
       try {
-        const response = await axios.get(`http://localhost:5000/api/properties/${id}`);
+        const response = await apiClient.get(`/properties/${id}`);
         const res = response.data.data
         setHouse(res)
       } catch (error) {
@@ -114,11 +113,7 @@ function HouseDetails() {
       return;
     }
 
-    axios.post('http://localhost:5000/api/messages', messagePayload, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    })
+    apiClient.post('/messages', messagePayload)
       .then(response => {
         setMessage(""); // clear only after success
       })

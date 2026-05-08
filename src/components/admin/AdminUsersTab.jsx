@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import axios from "axios";
+import apiClient from "../../api/client";
 import { useAuth } from "../../context/AuthContext";
 
 const AdminUsersTab = () => {
@@ -8,10 +8,8 @@ const AdminUsersTab = () => {
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        axios
-            .get("http://localhost:5000/api/users", {
-                headers: { Authorization: `Bearer ${token}` },
-            })
+        apiClient
+            .get("/users")
             .then((res) => setUsers(res.data.data || []))
             .catch(console.error)
             .finally(() => setLoading(false));

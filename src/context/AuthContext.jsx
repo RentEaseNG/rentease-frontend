@@ -1,4 +1,5 @@
 import React, { createContext, useState, useContext, useEffect } from 'react';
+import apiClient from '../api/client';
 
 const AuthContext = createContext();
 
@@ -14,25 +15,18 @@ export const AuthProvider = ({ children }) => {
     const storedToken = localStorage.getItem('token');
     if (storedToken) {
       setToken(storedToken);
-      fetchUserData(storedToken);
+      fetchUserData();
     } else {
       setLoading(false);
     }
   }, []);
 
-  const fetchUserData = async (authToken) => {
+  const fetchUserData = async () => {
     try {
-      const response = await fetch('http://localhost:5000/api/users/me', {
-        method: 'GET',
-        headers: {
-          'Authorization': `Bearer ${authToken}`,
-          'Content-Type': 'application/json'
-        }
-      });
+      const response = await apiClient.get('/users/me');
 
-      if (response.ok) {
-        const userData = await response.json();
-        setUser(userData.data);
+      if (response.status === 200) {
+        setUser(response.data.data);
       } else {
         // If token is invalid, clear it
         logout();
@@ -48,7 +42,7 @@ export const AuthProvider = ({ children }) => {
   const login = (authToken) => {
     setToken(authToken);
     localStorage.setItem('token', authToken);
-    fetchUserData(authToken);
+    fetchUserData();
   };
 
   const logout = () => {

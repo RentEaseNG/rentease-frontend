@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef, useCallback } from "react";
-import axios from "axios";
+import apiClient from "../api/client";
 import { useAuth } from "../context/AuthContext";
 import { useSocket } from "../context/SocketContext";
 import { MessageSquare, Send, Circle } from "lucide-react";
@@ -105,9 +105,7 @@ const Messages = () => {
   const fetchConversations = useCallback(async () => {
     if (!token) return;
     try {
-      const res = await axios.get("http://localhost:5000/api/messages/conversations", {
-        headers: { Authorization: `Bearer ${token}` },
-      });
+      const res = await apiClient.get("/messages/conversations");
       setConversations(res.data.data ?? []);
     } catch (err) {
       console.error("fetchConversations:", err);
@@ -196,9 +194,8 @@ const Messages = () => {
     setTypingUser(null);
     setLoadingMsgs(true);
     try {
-      const res = await axios.get(
-        `http://localhost:5000/api/messages/conversation/${conv.otherUser._id}/${conv.property._id}`,
-        { headers: { Authorization: `Bearer ${token}` } }
+      const res = await apiClient.get(
+        `/messages/conversation/${conv.otherUser._id}/${conv.property._id}`
       );
       setMessages(res.data.data?.messages ?? []);
       // Scroll instantly to bottom when switching conversations

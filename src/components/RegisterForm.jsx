@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
+import apiClient from '../api/client';
 
 const RegisterForm = () => {
   const [formData, setFormData] = useState({
@@ -28,23 +29,11 @@ const RegisterForm = () => {
     }
 
     try {
-      const response = await fetch('http://localhost:5000/api/auth/register', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          name: formData.fullName,
-          email: formData.email,
-          password: formData.password
-        })
+      const response = await apiClient.post('/auth/register', {
+        name: formData.fullName,
+        email: formData.email,
+        password: formData.password
       });
-
-      const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error(data.message || 'Registration failed');
-      }
 
       setSuccess('✅ Registration successful!');
       setError('');
@@ -58,7 +47,7 @@ const RegisterForm = () => {
       });
 
     } catch (err) {
-      setError(err.message);
+      setError(err.response?.data?.message || err.message);
       setSuccess('');
     }
   };

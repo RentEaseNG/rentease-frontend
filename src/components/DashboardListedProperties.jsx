@@ -1,27 +1,24 @@
 import React, { useEffect, useState } from 'react'
 import { useAuth } from '../context/AuthContext'
 import { Link } from 'react-router-dom'
-import axios from 'axios';
+import apiClient from '../api/client';
 
 const DashboardListedProperties = () => {
     const [listedProperties, setListedProperties] = useState(0);
-    const { user } = useAuth();
+    const { user, token } = useAuth();
 
     useEffect(() => {
         const fetchHouses = async () => {
+            if (!token) return;
             try {
-                const res = await axios.get("http://localhost:5000/api/properties")
-                const allProperties = res.data?.data ?? [];
-                const userProperties = allProperties.filter(
-                    (property) => property.landlord?._id === user?._id || property.landlord === user?._id
-                );
-                setListedProperties(userProperties.length)
+                const res = await apiClient.get("/properties/my")
+                setListedProperties(res.data?.data?.length ?? 0)
             } catch (error) {
                 console.error("error", error)
             }
         }
         fetchHouses();
-    }, [user])
+    }, [token])
 
     return (
         <Link to="/my-properties" className='block bg-white shadow-md p-6 rounded-lg hover:shadow-lg transition-shadow group'>

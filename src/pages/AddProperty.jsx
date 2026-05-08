@@ -1,4 +1,4 @@
-import axios from 'axios';
+import apiClient from '../api/client';
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
@@ -31,7 +31,7 @@ const AddProperty = () => {
   useEffect(() => {
     const fetchApartmentTypes = async () => {
       try {
-        const res = await axios.get('http://localhost:5000/api/apartment-types');
+        const res = await apiClient.get('/apartment-types');
         if (res.data.success) {
           setApartmentTypes(res.data.data);
         }
@@ -85,15 +85,9 @@ const AddProperty = () => {
         images: formData.images
       };
 
-      const res = await axios.post(
-        'http://localhost:5000/api/properties',
-        propertyData,
-        {
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${token}`
-          }
-        }
+      const res = await apiClient.post(
+        '/properties',
+        propertyData
       );
 
       console.log('Property created successfully:', res.data);

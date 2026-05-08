@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import axios from 'axios';
+import apiClient from '../api/client';
 import {
     Home, CalendarCheck, Bell, MessageSquare,
     Plus, ArrowRight, MapPin, CheckCircle,
@@ -92,31 +92,22 @@ const Dashboard = () => {
     // Fetch bookings
     useEffect(() => {
         if (!token) return;
-        axios
-            .get('http://localhost:5000/api/bookings/my', {
-                headers: { Authorization: `Bearer ${token}` },
-            })
+        apiClient
+            .get('/bookings/my')
             .then((r) => setBookings(r.data?.data ?? []))
             .catch(() => { })
             .finally(() => setLoadingBookings(false));
     }, [token]);
 
-    // Fetch user's properties
+    // Fetch properties
     useEffect(() => {
-        if (!user) return;
-        axios
-            .get('http://localhost:5000/api/properties')
-            .then((r) => {
-                const all = r.data?.data ?? [];
-                setProperties(
-                    all.filter(
-                        (p) => p.landlord?._id === user._id || p.landlord === user._id
-                    )
-                );
-            })
+        if (!token) return;
+        apiClient
+            .get('/properties/my')
+            .then((r) => setProperties(r.data?.data ?? []))
             .catch(() => { })
             .finally(() => setLoadingProps(false));
-    }, [user]);
+    }, [token]);
 
     // Derived
     const recentBookings = bookings.slice(0, 3);

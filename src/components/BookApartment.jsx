@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useAuth } from "../context/AuthContext";
-import axios from "axios";
+import apiClient from "../api/client";
 
 const BookApartment = ({ propertyId }) => {
     const { user, token } = useAuth();
@@ -18,24 +18,11 @@ const BookApartment = ({ propertyId }) => {
         setError("");
 
         try {
-            console.log(
+            const response = await apiClient.post("/bookings",
                 {
                     propertyId: propertyId,
                     startDate: "2026-03-10",
                     endDate: "2026-03-20",
-                }
-            )
-            const response = await axios.post("http://localhost:5000/api/bookings",
-                {
-                    propertyId: propertyId,
-                    startDate: "2026-03-10",
-                    endDate: "2026-03-20",
-                },
-                {
-                    headers: {
-                        "Content-Type": "application/json",
-                        Authorization: `Bearer ${token}`, // ✅ use auth token from context
-                    },
                 }
             );
 

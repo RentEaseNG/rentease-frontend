@@ -1,14 +1,12 @@
 import React, { useEffect, useState } from "react";
-import axios from "axios";
+import React, { useEffect, useState } from "react";
+import apiClient from "../../api/client";
 import { useAuth } from "../../context/AuthContext";
 
 const STATUSES = ["pending", "confirmed", "cancelled", "completed"];
 
 const STATUS_STYLES = {
-    pending: "bg-yellow-100 text-yellow-800",
-    confirmed: "bg-green-100 text-green-800",
-    cancelled: "bg-red-100 text-red-800",
-    completed: "bg-blue-100 text-blue-800",
+    // ... existing styles ...
 };
 
 const AdminBookingsTab = () => {
@@ -18,10 +16,8 @@ const AdminBookingsTab = () => {
     const [updating, setUpdating] = useState(null); // booking id being updated
 
     useEffect(() => {
-        axios
-            .get("http://localhost:5000/api/bookings", {
-                headers: { Authorization: `Bearer ${token}` },
-            })
+        apiClient
+            .get("/bookings")
             .then((res) => setBookings(res.data.data || []))
             .catch(console.error)
             .finally(() => setLoading(false));
@@ -30,10 +26,9 @@ const AdminBookingsTab = () => {
     const handleStatusChange = async (bookingId, newStatus) => {
         setUpdating(bookingId);
         try {
-            const res = await axios.patch(
-                `http://localhost:5000/api/bookings/${bookingId}/status`,
-                { status: newStatus },
-                { headers: { Authorization: `Bearer ${token}` } }
+            const res = await apiClient.patch(
+                `/bookings/${bookingId}/status`,
+                { status: newStatus }
             );
             setBookings((prev) =>
                 prev.map((b) =>

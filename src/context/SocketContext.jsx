@@ -25,7 +25,7 @@ export const SocketProvider = ({ children }) => {
         // Avoid duplicate connections
         if (socketRef.current?.connected) return;
 
-        const socket = io('http://localhost:5000', {
+        const socket = io(import.meta.env.VITE_SOCKET_URL, {
             auth: { token },
             transports: ['websocket'],
             reconnectionAttempts: 5,

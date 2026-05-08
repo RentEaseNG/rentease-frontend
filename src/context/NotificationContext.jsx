@@ -1,12 +1,10 @@
 import React, { createContext, useState, useContext, useEffect, useCallback, useRef } from 'react';
-import axios from 'axios';
+import apiClient from '../api/client';
 import { useAuth } from './AuthContext';
 
 const NotificationContext = createContext();
 
 export const useNotification = () => useContext(NotificationContext);
-
-const BASE = 'http://localhost:5000/api/notifications';
 
 export const NotificationProvider = ({ children }) => {
     const { token, user } = useAuth();
@@ -17,20 +15,16 @@ export const NotificationProvider = ({ children }) => {
     const [page, setPage] = useState(1);
     const pollingRef = useRef(null);
 
-    const authHeader = useCallback(() => ({
-        headers: { Authorization: `Bearer ${token}` },
-    }), [token]);
-
     // Fetch unread count only (lightweight — used for polling)
     const fetchUnreadCount = useCallback(async () => {
         if (!token) return;
         try {
-            const res = await axios.get(`${BASE}/unread-count`, authHeader());
+            const res = await apiClient.get('/notifications/unread-count');
             setUnreadCount(res.data.data?.unreadCount ?? 0);
         } catch {
             // silently fail
         }
-    }, [token, authHeader]);
+    }, [token]);
 
     // Fetch notification list (used when panel / page opens)
     const fetchNotifications = useCallback(async (reset = false) => {
@@ -38,7 +32,7 @@ export const NotificationProvider = ({ children }) => {
         setLoading(true);
         const targetPage = reset ? 1 : page;
         try {
-            const res = await axios.get(`${BASE}?page=${targetPage}&limit=10`, authHeader());
+            const res = await apiClient.get(`/notifications?page=${targetPage}&limit=10`);
             const { notifications: fetched, pagination, summary } = res.data.data;
             setNotifications(prev => reset ? fetched : [...prev, ...fetched]);
             setUnreadCount(summary?.unreadCount ?? 0);
@@ -50,13 +44,13 @@ export const NotificationProvider = ({ children }) => {
         } finally {
             setLoading(false);
         }
-    }, [token, authHeader, page]);
+    }, [token, page]);
 
     // Mark a single notification as read
     const markAsRead = useCallback(async (id) => {
         if (!token) return;
         try {
-            await axios.put(`${BASE}/${id}/read`, {}, authHeader());
+            await apiClient.put(`/notifications/${id}/read`);
             setNotifications(prev =>
                 prev.map(n => n._id === id ? { ...n, read: true } : n)
             );
@@ -64,26 +58,26 @@ export const NotificationProvider = ({ children }) => {
         } catch {
             // silently fail
         }
-    }, [token, authHeader]);
+    }, [token]);
 
     // Mark all as read
     const markAllAsRead = useCallback(async () => {
         if (!token) return;
         try {
-            await axios.put(`${BASE}/read-all`, {}, authHeader());
+            await apiClient.put('/notifications/read-all');
             setNotifications(prev => prev.map(n => ({ ...n, read: true })));
             setUnreadCount(0);
         } catch {
             // silently fail
         }
-    }, [token, authHeader]);
+    }, [token]);
 
     // Delete a single notification
     const deleteNotification = useCallback(async (id) => {
         if (!token) return;
         try {
             const deleted = notifications.find(n => n._id === id);
-            await axios.delete(`${BASE}/${id}`, authHeader());
+            await apiClient.delete(`/notifications/${id}`);
             setNotifications(prev => prev.filter(n => n._id !== id));
             if (deleted && !deleted.read) {
                 setUnreadCount(prev => Math.max(0, prev - 1));
@@ -91,19 +85,19 @@ export const NotificationProvider = ({ children }) => {
         } catch {
             // silently fail
         }
-    }, [token, authHeader, notifications]);
+    }, [token, notifications]);
 
     // Clear all notifications
     const clearAll = useCallback(async () => {
         if (!token) return;
         try {
-            await axios.delete(`${BASE}/clear-all`, authHeader());
+            await apiClient.delete('/notifications/clear-all');
             setNotifications([]);
             setUnreadCount(0);
         } catch {
             // silently fail
         }
-    }, [token, authHeader]);
+    }, [token]);
 
     // Start polling when user is logged in
     useEffect(() => {

@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useCallback } from 'react';
-import axios from 'axios';
+import apiClient from '../api/client';
 import { useAuth } from '../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import {
@@ -43,10 +43,9 @@ const EditModal = ({ property, apartmentTypes, token, onClose, onSaved }) => {
 
         setSaving(true);
         try {
-            const res = await axios.patch(
-                `http://localhost:5000/api/properties/${property._id}`,
-                { ...form, price: parseFloat(form.price), images },
-                { headers: { Authorization: `Bearer ${token}` } }
+            const res = await apiClient.patch(
+                `/properties/${property._id}`,
+                { ...form, price: parseFloat(form.price), images }
             );
             onSaved(res.data.data);
             onClose();
@@ -171,37 +170,32 @@ const MyProperties = () => {
     const [apartmentTypes, setApartmentTypes] = useState([]);
     const [error, setError] = useState('');
 
-    const fetchProperties = useCallback(async () => {
+    const fetchMyProperties = useCallback(async () => {
         if (!token) return;
         setLoading(true);
         try {
-            const res = await axios.get('http://localhost:5000/api/properties', {
-                headers: { Authorization: `Bearer ${token}` },
-            });
-            const all = res.data.data ?? [];
-            setProperties(all.filter(p => p.landlord?._id === user?._id || p.landlord === user?._id));
+            const res = await apiClient.get('/properties/my');
+            setProperties(res.data.data ?? []);
         } catch {
             setError('Failed to load your properties.');
         } finally {
             setLoading(false);
         }
-    }, [token, user]);
+    }, [token]);
 
     useEffect(() => {
-        fetchProperties();
+        fetchMyProperties();
         // Also fetch apartment types for the edit modal
-        axios.get('http://localhost:5000/api/apartment-types')
+        apiClient.get('/apartment-types')
             .then(r => setApartmentTypes(r.data.data ?? []))
             .catch(() => { });
-    }, [fetchProperties]);
+    }, [fetchMyProperties]);
 
     const handleDelete = async (id) => {
         if (!window.confirm('Delete this property? This cannot be undone.')) return;
         setDeleting(id);
         try {
-            await axios.delete(`http://localhost:5000/api/properties/${id}`, {
-                headers: { Authorization: `Bearer ${token}` },
-            });
+            await apiClient.delete(`/properties/${id}`);
             setProperties(prev => prev.filter(p => p._id !== id));
         } catch (err) {
             alert(err.response?.data?.message ?? 'Failed to delete property.');

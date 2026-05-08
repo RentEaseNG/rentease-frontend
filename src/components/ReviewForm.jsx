@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { useParams } from 'react-router-dom';
-import axios from 'axios';
+import apiClient from '../api/client';
 import { useAuth } from '../context/AuthContext';
 import { Star } from 'lucide-react';
 
@@ -43,17 +43,15 @@ const ReviewForm = ({ onReviewAdded, editingReview, onCancelEdit }) => {
         try {
             if (isEditMode) {
                 // PUT /api/reviews/:reviewId
-                await axios.put(
-                    `http://localhost:5000/api/reviews/${editingReview._id}`,
-                    { rating, comment },
-                    { headers: { Authorization: `Bearer ${token}` } }
+                await apiClient.put(
+                    `/reviews/${editingReview._id}`,
+                    { rating, comment }
                 );
             } else {
                 // POST /api/reviews
-                await axios.post(
-                    'http://localhost:5000/api/reviews',
-                    { propertyId: id, rating, comment },
-                    { headers: { Authorization: `Bearer ${token}` } }
+                await apiClient.post(
+                    '/reviews',
+                    { propertyId: id, rating, comment }
                 );
             }
 
