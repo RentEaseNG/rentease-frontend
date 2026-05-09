@@ -366,7 +366,7 @@ const Dashboard = () => {
                             <Link
                                 key={label}
                                 to={to}
-                                className={`${bg} ${hover} transition-colors rounded-2xl p-5 flex flex-col
+                                className={`${bg} ${hover} rounded-2xl p-5 flex flex-col
                             items-center justify-center gap-3 text-white shadow-sm
                             hover:shadow-md hover:-translate-y-0.5 transition-all duration-200`}
                             >
