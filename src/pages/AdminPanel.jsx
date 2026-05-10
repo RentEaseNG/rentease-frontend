@@ -22,7 +22,7 @@ const AdminPanel = () => {
 
     useEffect(() => {
         apiClient
-            .get("/dashboard/admin-overview")
+            .get("/dashboard/admin/overview")
             .then((res) => setStats(res.data.data))
             .catch(console.error)
             .finally(() => setStatsLoading(false));

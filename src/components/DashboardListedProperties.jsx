@@ -9,16 +9,17 @@ const DashboardListedProperties = () => {
 
     useEffect(() => {
         const fetchHouses = async () => {
-            if (!token) return;
+            if (!token || !user?._id) return;
             try {
-                const res = await apiClient.get("/properties/my")
-                setListedProperties(res.data?.data?.length ?? 0)
+                const res = await apiClient.get(`/users/${user._id}/properties`);
+                const props = res.data?.data?.properties ?? res.data?.data ?? [];
+                setListedProperties(Array.isArray(props) ? props.length : 0);
             } catch (error) {
                 console.error("error", error)
             }
         }
         fetchHouses();
-    }, [token])
+    }, [token, user?._id])
 
     return (
         <Link to="/my-properties" className='block bg-white shadow-md p-6 rounded-lg hover:shadow-lg transition-shadow group'>

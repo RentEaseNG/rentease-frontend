@@ -1,12 +1,14 @@
 import React, { useEffect, useState } from "react";
-import React, { useEffect, useState } from "react";
 import apiClient from "../../api/client";
 import { useAuth } from "../../context/AuthContext";
 
 const STATUSES = ["pending", "confirmed", "cancelled", "completed"];
 
 const STATUS_STYLES = {
-    // ... existing styles ...
+    pending: "bg-yellow-100 text-yellow-700",
+    confirmed: "bg-green-100 text-green-700",
+    cancelled: "bg-red-100 text-red-600",
+    completed: "bg-blue-100 text-blue-700",
 };
 
 const AdminBookingsTab = () => {
@@ -16,9 +18,10 @@ const AdminBookingsTab = () => {
     const [updating, setUpdating] = useState(null); // booking id being updated
 
     useEffect(() => {
+        // /api/bookings/user/bookings returns all bookings for admins
         apiClient
-            .get("/bookings")
-            .then((res) => setBookings(res.data.data || []))
+            .get("/bookings/user/bookings")
+            .then((res) => setBookings(res.data.data?.bookings ?? res.data.data ?? []))
             .catch(console.error)
             .finally(() => setLoading(false));
     }, [token]);
@@ -32,12 +35,12 @@ const AdminBookingsTab = () => {
             );
             setBookings((prev) =>
                 prev.map((b) =>
-                    b._id === bookingId ? { ...b, status: res.data.data.status } : b
+                    b._id === bookingId ? { ...b, status: res.data.data?.status ?? newStatus } : b
                 )
             );
         } catch (err) {
             console.error("Status update failed:", err);
-            alert("Failed to update status.");
+            alert(err.response?.data?.message ?? "Failed to update status.");
         } finally {
             setUpdating(null);
         }
@@ -73,7 +76,7 @@ const AdminBookingsTab = () => {
                     {bookings.map((b) => (
                         <tr key={b._id} className="bg-white hover:bg-gray-50 transition-colors">
                             <td className="px-4 py-3 font-medium text-gray-800">
-                                {b.tenant?.name || "—"}
+                                {b.tenant?.name || b.tenant?.firstName || "—"}
                                 <p className="text-xs text-gray-400 font-normal">{b.tenant?.email}</p>
                             </td>
                             <td className="px-4 py-3 text-gray-700">
@@ -81,10 +84,10 @@ const AdminBookingsTab = () => {
                                 <p className="text-xs text-gray-400">{b.property?.location}</p>
                             </td>
                             <td className="px-4 py-3 text-gray-600 whitespace-nowrap">
-                                {fmt(b.startDate)} → {fmt(b.endDate)}
+                                {b.startDate ? fmt(b.startDate) : "—"} → {b.endDate ? fmt(b.endDate) : "—"}
                             </td>
                             <td className="px-4 py-3 font-medium text-gray-800">
-                                ₦{b.totalPrice?.toLocaleString()}
+                                ₦{b.totalPrice?.toLocaleString() ?? "—"}
                             </td>
                             <td className="px-4 py-3">
                                 <select

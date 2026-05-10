@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useEffect, useRef, useState } from 'react';
+import React, { createContext, useContext, useEffect, useState } from 'react';
 import { io } from 'socket.io-client';
 import { useAuth } from './AuthContext';
 
@@ -8,55 +8,54 @@ export const useSocket = () => useContext(SocketContext);
 
 export const SocketProvider = ({ children }) => {
     const { token, user } = useAuth();
-    const socketRef = useRef(null);
+    const [socket, setSocket] = useState(null);
     const [connected, setConnected] = useState(false);
 
     useEffect(() => {
-        // Only connect when authenticated
+        // Disconnect and clean up when user logs out
         if (!token || !user) {
-            if (socketRef.current) {
-                socketRef.current.disconnect();
-                socketRef.current = null;
-                setConnected(false);
-            }
+            setSocket(prev => {
+                if (prev) prev.disconnect();
+                return null;
+            });
+            setConnected(false);
             return;
         }
 
-        // Avoid duplicate connections
-        if (socketRef.current?.connected) return;
-
-        const socket = io(import.meta.env.VITE_SOCKET_URL, {
+        // Create a new socket connection
+        const newSocket = io(import.meta.env.VITE_SOCKET_URL || 'http://localhost:5000', {
             auth: { token },
-            transports: ['websocket'],
+            // Let Socket.IO negotiate transport automatically (polling → websocket)
+            // Do NOT force transports: ['websocket'] — this skips the handshake
             reconnectionAttempts: 5,
             reconnectionDelay: 1000,
         });
 
-        socket.on('connect', () => {
+        newSocket.on('connect', () => {
             setConnected(true);
-            socket.emit('user_online');
+            newSocket.emit('user_online');
         });
 
-        socket.on('disconnect', () => {
+        newSocket.on('disconnect', () => {
             setConnected(false);
         });
 
-        socket.on('connect_error', (err) => {
+        newSocket.on('connect_error', (err) => {
             console.error('Socket connection error:', err.message);
             setConnected(false);
         });
 
-        socketRef.current = socket;
+        setSocket(newSocket);
 
         return () => {
-            socket.disconnect();
-            socketRef.current = null;
+            newSocket.disconnect();
+            setSocket(null);
             setConnected(false);
         };
     }, [token, user]);
 
     return (
-        <SocketContext.Provider value={{ socket: socketRef.current, connected }}>
+        <SocketContext.Provider value={{ socket, connected }}>
             {children}
         </SocketContext.Provider>
     );

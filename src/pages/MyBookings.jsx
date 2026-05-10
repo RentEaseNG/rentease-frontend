@@ -16,8 +16,8 @@ const MyBookings = () => {
     useEffect(() => {
         const fetch = async () => {
             try {
-                const res = await apiClient.get("/bookings/my");
-                setBookings(res.data.data || []);
+                const res = await apiClient.get('/bookings/tenant');
+                setBookings(res.data.data?.bookings ?? res.data.data ?? []);
             } catch (err) {
                 setError("Failed to load bookings. Please try again.");
                 console.error(err);

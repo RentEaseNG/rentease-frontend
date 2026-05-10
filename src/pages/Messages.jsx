@@ -106,7 +106,7 @@ const Messages = () => {
     if (!token) return;
     try {
       const res = await apiClient.get("/messages/conversations");
-      setConversations(res.data.data ?? []);
+      setConversations(res.data.data?.conversations ?? []);
     } catch (err) {
       console.error("fetchConversations:", err);
     } finally {

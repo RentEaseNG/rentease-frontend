@@ -14,6 +14,9 @@
     "test:coverage": "vitest run --coverage"
   },
   "dependencies": {
+    "@fontsource/outfit": "^5.2.8",
+    "@fontsource/plus-jakarta-sans": "^5.2.8",
+    "@phosphor-icons/react": "^2.1.10",
     "@tailwindcss/vite": "^4.1.13",
     "axios": "^1.12.2",
     "framer-motion": "^12.23.20",

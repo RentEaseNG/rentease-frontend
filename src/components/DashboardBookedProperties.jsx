@@ -9,9 +9,11 @@ const DashboardBookedProperties = () => {
 
     useEffect(() => {
         const fetchBookings = async () => {
+            if (!token) return;
             try {
-                const res = await apiClient.get("/bookings/my")
-                setBookedProperties(res.data?.data?.length ?? 0)
+                const res = await apiClient.get("/bookings/tenant");
+                const bkgs = res.data?.data?.bookings ?? res.data?.data ?? [];
+                setBookedProperties(Array.isArray(bkgs) ? bkgs.length : 0);
             } catch (error) {
                 console.error("error", error)
             }

@@ -23,7 +23,7 @@ export const AuthProvider = ({ children }) => {
 
   const fetchUserData = async () => {
     try {
-      const response = await apiClient.get('/users/me');
+      const response = await apiClient.get('/users/profile');
 
       if (response.status === 200) {
         setUser(response.data.data);
@@ -54,7 +54,7 @@ export const AuthProvider = ({ children }) => {
   // Re-fetch user data without triggering a full login flow
   const refreshUser = () => {
     const storedToken = token || localStorage.getItem('token');
-    if (storedToken) fetchUserData(storedToken);
+    if (storedToken) fetchUserData();
   };
 
   return (

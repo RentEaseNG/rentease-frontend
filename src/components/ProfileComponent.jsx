@@ -24,20 +24,21 @@ const Banner = ({ type, msg }) => (
 // ─── Edit Profile section ─────────────────────────────────────────────────────
 const EditProfileSection = ({ user, token, onUpdated }) => {
   const [open, setOpen] = useState(false);
-  const [name, setName] = useState(user.name ?? '');
+  const [firstName, setFirstName] = useState(user.firstName ?? '');
+  const [lastName, setLastName] = useState(user.lastName ?? '');
   const [phone, setPhone] = useState(user.phoneNumber ?? '');
   const [saving, setSaving] = useState(false);
   const [banner, setBanner] = useState(null);
 
   const handleSave = async (e) => {
     e.preventDefault();
-    if (!name.trim()) return setBanner({ type: 'error', msg: 'Name is required.' });
+    if (!firstName.trim()) return setBanner({ type: 'error', msg: 'First name is required.' });
     setSaving(true);
     setBanner(null);
     try {
       const res = await apiClient.patch(
-        '/users/me',
-        { name: name.trim(), phoneNumber: phone.trim() }
+        '/users/profile',
+        { firstName: firstName.trim(), lastName: lastName.trim(), phoneNumber: phone.trim() }
       );
       onUpdated(res.data.data);
       setBanner({ type: 'success', msg: 'Profile updated!' });
@@ -87,14 +88,26 @@ const EditProfileSection = ({ user, token, onUpdated }) => {
       {/* Edit form */}
       {open && (
         <form onSubmit={handleSave} className="mt-5 space-y-3 bg-gray-50 border border-gray-100 rounded-xl p-4">
-          <div>
-            <label className="block text-xs font-medium text-gray-600 mb-1">Full Name</label>
-            <input
-              value={name}
-              onChange={e => setName(e.target.value)}
-              className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-600"
-              placeholder="Your full name"
-            />
+          <div className="grid grid-cols-2 gap-3">
+            <div>
+              <label className="block text-xs font-medium text-gray-600 mb-1">First Name</label>
+              <input
+                value={firstName}
+                onChange={e => setFirstName(e.target.value)}
+                className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-600"
+                placeholder="First name"
+                required
+              />
+            </div>
+            <div>
+              <label className="block text-xs font-medium text-gray-600 mb-1">Last Name</label>
+              <input
+                value={lastName}
+                onChange={e => setLastName(e.target.value)}
+                className="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-600"
+                placeholder="Last name"
+              />
+            </div>
           </div>
           <div>
             <label className="block text-xs font-medium text-gray-600 mb-1">Phone Number</label>
@@ -144,7 +157,7 @@ const ChangePasswordSection = ({ token }) => {
     setBanner(null);
     try {
       await apiClient.put(
-        '/users/me/password',
+        '/users/profile/password',
         { currentPassword: current, newPassword: next }
       );
       setBanner({ type: 'success', msg: 'Password changed successfully!' });
@@ -222,10 +235,19 @@ const ProfileComponent = () => {
   const navigate = useNavigate();
 
   const handleUpdated = () => {
-    refreshUser(); // re-fetches user data from /api/users/me and updates context
+    refreshUser(); // re-fetches user data from /api/users/profile and updates context
   };
 
-  const getInitial = () => (user?.name ? user.name.charAt(0).toUpperCase() : '?');
+  // Build display name from firstName+lastName or fall back to name or email
+  const getDisplayName = () => {
+    if (user.firstName) return `${user.firstName} ${user.lastName || ''}`.trim();
+    return user.name || user.email || 'User';
+  };
+
+  const getInitial = () => {
+    if (user.firstName) return user.firstName.charAt(0).toUpperCase();
+    return user.name ? user.name.charAt(0).toUpperCase() : '?';
+  };
 
   if (!user) return null;
 
@@ -239,7 +261,7 @@ const ProfileComponent = () => {
           <div className="w-24 h-24 rounded-full bg-gradient-to-br from-blue-500 to-green-600 flex items-center justify-center text-white text-3xl font-bold shadow-md">
             {getInitial()}
           </div>
-          <h2 className="text-2xl font-bold text-gray-800">{user.name || 'User'}</h2>
+          <h2 className="text-2xl font-bold text-gray-800">{getDisplayName()}</h2>
           <span className={`text-xs font-semibold px-3 py-1 rounded-full ${ROLE_STYLES[user.role] ?? 'bg-gray-100 text-gray-600'}`}>
             {user.role ?? 'Tenant'}
           </span>

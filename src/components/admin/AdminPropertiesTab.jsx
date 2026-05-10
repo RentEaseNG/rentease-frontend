@@ -12,7 +12,7 @@ const AdminPropertiesTab = () => {
     useEffect(() => {
         apiClient
             .get("/properties")
-            .then((res) => setProperties(res.data.data || []))
+            .then((res) => setProperties(res.data.data?.properties ?? res.data.data ?? []))
             .catch(console.error)
             .finally(() => setLoading(false));
     }, [token]);

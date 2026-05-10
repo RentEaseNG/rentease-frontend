@@ -171,17 +171,17 @@ const MyProperties = () => {
     const [error, setError] = useState('');
 
     const fetchMyProperties = useCallback(async () => {
-        if (!token) return;
+        if (!token || !user?._id) return;
         setLoading(true);
         try {
-            const res = await apiClient.get('/properties/my');
-            setProperties(res.data.data ?? []);
+            const res = await apiClient.get(`/users/${user._id}/properties`);
+            setProperties(res.data.data?.properties ?? res.data.data ?? []);
         } catch {
             setError('Failed to load your properties.');
         } finally {
             setLoading(false);
         }
-    }, [token]);
+    }, [token, user?._id]);
 
     useEffect(() => {
         fetchMyProperties();
@@ -238,25 +238,32 @@ const MyProperties = () => {
             <div className="min-h-screen bg-gray-50 py-10 px-4">
                 <div className="max-w-5xl mx-auto">
 
+                <div className="max-w-5xl mx-auto">
+
                     {/* Header */}
-                    <div className="flex items-center justify-between mb-8">
+                    <motion.div 
+                        initial={{ opacity: 0, y: -20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        className="flex flex-col md:flex-row justify-between items-start md:items-end mb-12 gap-6"
+                    >
                         <div>
-                            <h1 className="text-3xl font-bold text-gray-900 flex items-center gap-2">
-                                <Home className="text-green-700" size={28} /> My Properties
+                            <h1 className="text-4xl md:text-5xl font-display font-extrabold text-zinc-900 tracking-tighter mb-2">
+                                My <span className="text-zinc-400">Properties.</span>
                             </h1>
-                            <p className="text-gray-500 mt-1 text-sm">
+                            <p className="text-zinc-500 font-medium leading-relaxed max-w-lg">
                                 {properties.length === 0
-                                    ? "You haven't listed any properties yet."
-                                    : `${properties.length} propert${properties.length === 1 ? 'y' : 'ies'} listed`}
+                                    ? "You haven't listed any properties yet. Start your journey by listing your first asset."
+                                    : `Managing ${properties.length} propert${properties.length === 1 ? 'y' : 'ies'} across your portfolio.`}
                             </p>
                         </div>
                         <button
                             onClick={() => navigate('/new')}
-                            className="flex items-center gap-2 bg-green-700 text-white px-4 py-2 rounded-lg hover:bg-green-800 transition-colors text-sm font-medium"
+                            className="btn-primary py-4 px-8 flex items-center gap-3 shadow-xl shadow-brand-600/20 group"
                         >
-                            <Plus size={16} /> List New Property
+                            <Plus size={20} weight="bold" className="group-hover:rotate-90 transition-transform duration-300" />
+                            <span>List New Property</span>
                         </button>
-                    </div>
+                    </motion.div>
 
                     {/* Error */}
                     {error && (

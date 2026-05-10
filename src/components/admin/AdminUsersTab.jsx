@@ -9,8 +9,8 @@ const AdminUsersTab = () => {
 
     useEffect(() => {
         apiClient
-            .get("/users")
-            .then((res) => setUsers(res.data.data || []))
+            .get("/users/admin/users")
+            .then((res) => setUsers(res.data.data?.users ?? res.data.data ?? []))
             .catch(console.error)
             .finally(() => setLoading(false));
     }, [token]);
