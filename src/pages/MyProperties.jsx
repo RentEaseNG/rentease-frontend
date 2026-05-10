@@ -2,10 +2,20 @@ import React, { useEffect, useState, useCallback } from 'react';
 import apiClient from '../api/client';
 import { useAuth } from '../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
+import { motion } from 'framer-motion';
 import {
-    Home, Pencil, Trash2, X, Check, Plus,
-    MapPin, DollarSign, Eye, AlertCircle,
-} from 'lucide-react';
+    House, 
+    Pencil, 
+    Trash, 
+    X, 
+    Check, 
+    Plus,
+    MapPin, 
+    CurrencyDollar, 
+    Eye, 
+    Warning,
+    Image as ImageIcon
+} from '@phosphor-icons/react';
 import CloudinaryUploader from '../components/CloudinaryUploader';
 
 // ────────────────────────────────────────────────────────────────────────────
@@ -62,17 +72,17 @@ const EditModal = ({ property, apartmentTypes, token, onClose, onSaved }) => {
                 {/* Header */}
                 <div className="flex items-center justify-between px-6 py-4 border-b border-gray-100">
                     <h2 className="text-lg font-bold text-gray-800 flex items-center gap-2">
-                        <Pencil size={18} className="text-green-700" /> Edit Property
+                        <Pencil size={18} weight="bold" className="text-brand-600" /> Edit Property
                     </h2>
-                    <button onClick={onClose} className="text-gray-400 hover:text-gray-600 transition-colors">
-                        <X size={20} />
+                    <button onClick={onClose} className="text-zinc-400 hover:text-zinc-600 transition-colors">
+                        <X size={20} weight="bold" />
                     </button>
                 </div>
 
                 <form onSubmit={handleSave} className="px-6 py-5 space-y-4">
                     {error && (
-                        <div className="flex items-center gap-2 bg-red-50 border border-red-200 text-red-700 text-sm px-4 py-2.5 rounded-lg">
-                            <AlertCircle size={15} /> {error}
+                        <div className="flex items-center gap-2 bg-rose-50 border border-rose-200 text-rose-700 text-sm px-4 py-2.5 rounded-lg">
+                            <Warning size={16} weight="fill" /> {error}
                         </div>
                     )}
 
@@ -142,12 +152,12 @@ const EditModal = ({ property, apartmentTypes, token, onClose, onSaved }) => {
                     {/* Actions */}
                     <div className="flex justify-end gap-3 pt-2">
                         <button type="button" onClick={onClose}
-                            className="px-4 py-2 text-sm text-gray-600 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors">
+                            className="px-4 py-2 text-sm text-zinc-600 border border-zinc-200 rounded-lg hover:bg-zinc-50 transition-colors">
                             Cancel
                         </button>
                         <button type="submit" disabled={saving}
-                            className="flex items-center gap-2 px-5 py-2 text-sm bg-green-700 text-white rounded-lg hover:bg-green-800 transition-colors disabled:opacity-50">
-                            <Check size={14} /> {saving ? 'Saving…' : 'Save Changes'}
+                            className="flex items-center gap-2 px-5 py-2 text-sm bg-brand-600 text-white rounded-lg hover:bg-brand-700 transition-colors disabled:opacity-50 font-bold uppercase tracking-widest">
+                            <Check size={16} weight="bold" /> {saving ? 'Saving…' : 'Save Changes'}
                         </button>
                     </div>
                 </form>
@@ -238,8 +248,6 @@ const MyProperties = () => {
             <div className="min-h-screen bg-gray-50 py-10 px-4">
                 <div className="max-w-5xl mx-auto">
 
-                <div className="max-w-5xl mx-auto">
-
                     {/* Header */}
                     <motion.div 
                         initial={{ opacity: 0, y: -20 }}
@@ -267,23 +275,23 @@ const MyProperties = () => {
 
                     {/* Error */}
                     {error && (
-                        <div className="flex items-center gap-2 bg-red-50 border border-red-200 text-red-700 text-sm px-4 py-3 rounded-lg mb-6">
-                            <AlertCircle size={15} /> {error}
+                        <div className="flex items-center gap-2 bg-rose-50 border border-rose-200 text-rose-700 text-sm px-4 py-3 rounded-lg mb-6">
+                            <Warning size={16} weight="fill" /> {error}
                         </div>
                     )}
 
                     {/* Empty state */}
                     {properties.length === 0 && !error && (
-                        <div className="flex flex-col items-center justify-center py-24 gap-4 text-gray-400">
-                            <div className="w-20 h-20 rounded-full bg-gray-100 flex items-center justify-center">
-                                <Home size={36} strokeWidth={1.2} />
+                        <div className="flex flex-col items-center justify-center py-24 gap-4 text-zinc-400">
+                            <div className="w-20 h-20 rounded-full bg-zinc-50 flex items-center justify-center">
+                                <House size={36} weight="regular" />
                             </div>
-                            <p className="text-lg font-medium text-gray-600">No properties listed yet</p>
+                            <p className="text-lg font-medium text-zinc-600 tracking-tight">No properties listed yet</p>
                             <button
                                 onClick={() => navigate('/new')}
-                                className="flex items-center gap-2 text-sm text-green-700 font-medium hover:underline"
+                                className="flex items-center gap-2 text-sm text-brand-600 font-bold hover:underline uppercase tracking-widest"
                             >
-                                <Plus size={14} /> List your first property
+                                <Plus size={16} weight="bold" /> List your first property
                             </button>
                         </div>
                     )}
@@ -320,16 +328,16 @@ const MyProperties = () => {
                                                 {p.available ? 'Available' : 'Unavailable'}
                                             </span>
                                         </div>
-                                        <div className="mt-1.5 flex flex-wrap gap-3 text-sm text-gray-500">
-                                            <span className="flex items-center gap-1">
-                                                <MapPin size={13} /> {p.location}
+                                        <div className="mt-1.5 flex flex-wrap gap-3 text-sm text-zinc-500">
+                                            <span className="flex items-center gap-1 font-medium">
+                                                <MapPin size={14} weight="bold" className="text-zinc-400" /> {p.location}
                                             </span>
-                                            <span className="flex items-center gap-1 font-medium text-gray-800">
-                                                <DollarSign size={13} className="text-green-700" />
-                                                ₦{p.price?.toLocaleString()}<span className="font-normal text-gray-400">/yr</span>
+                                            <span className="flex items-center gap-1 font-bold text-zinc-900">
+                                                <CurrencyDollar size={16} weight="bold" className="text-brand-600" />
+                                                ₦{p.price?.toLocaleString()}<span className="font-medium text-zinc-400">/yr</span>
                                             </span>
                                             {p.apartmentType?.name && (
-                                                <span className="bg-gray-100 px-2 py-0.5 rounded text-xs text-gray-600">
+                                                <span className="bg-zinc-100 px-2 py-0.5 rounded text-[10px] font-bold text-zinc-600 uppercase tracking-widest">
                                                     {p.apartmentType.name}
                                                 </span>
                                             )}
@@ -337,25 +345,25 @@ const MyProperties = () => {
                                     </div>
 
                                     {/* Actions */}
-                                    <div className="flex items-center gap-2 mt-3">
+                                    <div className="flex items-center gap-2 mt-4">
                                         <button
                                             onClick={() => navigate(`/house/${p._id}`)}
-                                            className="flex items-center gap-1.5 text-xs text-green-700 border border-green-200 bg-green-50 hover:bg-green-100 px-3 py-1.5 rounded-lg transition-colors font-medium"
+                                            className="flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-widest text-brand-600 border border-brand-200 bg-brand-50 hover:bg-brand-100 px-4 py-2 rounded-xl transition-all"
                                         >
-                                            <Eye size={13} /> View
+                                            <Eye size={14} weight="bold" /> View
                                         </button>
                                         <button
                                             onClick={() => setEditing(p)}
-                                            className="flex items-center gap-1.5 text-xs text-blue-700 border border-blue-200 bg-blue-50 hover:bg-blue-100 px-3 py-1.5 rounded-lg transition-colors font-medium"
+                                            className="flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-widest text-zinc-600 border border-zinc-200 bg-zinc-50 hover:bg-zinc-100 px-4 py-2 rounded-xl transition-all"
                                         >
-                                            <Pencil size={13} /> Edit
+                                            <Pencil size={14} weight="bold" /> Edit
                                         </button>
                                         <button
                                             onClick={() => handleDelete(p._id)}
                                             disabled={deleting === p._id}
-                                            className="flex items-center gap-1.5 text-xs text-red-600 border border-red-200 bg-red-50 hover:bg-red-100 px-3 py-1.5 rounded-lg transition-colors font-medium disabled:opacity-40"
+                                            className="flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-widest text-rose-600 border border-rose-200 bg-rose-50 hover:bg-rose-100 px-4 py-2 rounded-xl transition-all disabled:opacity-40"
                                         >
-                                            <Trash2 size={13} /> {deleting === p._id ? 'Deleting…' : 'Delete'}
+                                            <Trash size={14} weight="bold" /> {deleting === p._id ? 'Deleting…' : 'Delete'}
                                         </button>
                                     </div>
                                 </div>

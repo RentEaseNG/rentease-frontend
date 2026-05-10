@@ -40,8 +40,15 @@ const AddProperty = () => {
         const fetchApartmentTypes = async () => {
             try {
                 const res = await apiClient.get('/apartment-types');
-                // Safety check: ensure res.data.data is an array
-                const types = Array.isArray(res.data.data) ? res.data.data : (Array.isArray(res.data) ? res.data : []);
+                // Extract from standardized response structure: res.data.data.apartmentTypes
+                let types = [];
+                if (res.data?.data?.apartmentTypes && Array.isArray(res.data.data.apartmentTypes)) {
+                    types = res.data.data.apartmentTypes;
+                } else if (Array.isArray(res.data.data)) {
+                    types = res.data.data;
+                } else if (Array.isArray(res.data)) {
+                    types = res.data;
+                }
                 setApartmentTypes(types);
             } catch (err) {
                 console.error('Error fetching apartment types:', err);
