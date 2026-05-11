@@ -1,51 +1,121 @@
 import React from 'react'
-import { Users, ShieldCheck, Home } from 'lucide-react';
+import { Users, ShieldCheck, ChatCircleDots, ChartLineUp } from '@phosphor-icons/react';
 import { motion } from 'framer-motion';
 
 const HomeFeatures = () => {
-    const features = [
-        {
-            icon: <Users className="w-10 h-10 text-green-600" />,
-            title: "Direct Connection",
-            description: "Connect directly with landlords and tenants. No middleman fees.",
-        },
-        {
-            icon: <ShieldCheck className="w-10 h-10 text-green-600" />,
-            title: "Verified Profiles",
-            description: "All users and properties go through our verification process.",
-        },
-        {
-            icon: <Home className="w-10 h-10 text-green-600" />,
-            title: "Easy Management",
-            description: "Manage bookings, payments, and communication in one place.",
-        },
-    ];
+    const containerVariants = {
+        hidden: { opacity: 0 },
+        show: {
+            opacity: 1,
+            transition: {
+                staggerChildren: 0.15
+            }
+        }
+    };
+
+    const itemVariants = {
+        hidden: { opacity: 0, y: 30 },
+        show: { 
+            opacity: 1, 
+            y: 0,
+            transition: { duration: 0.8, ease: [0.16, 1, 0.3, 1] }
+        }
+    };
 
     return (
-        <section className=' p-10'>
-            <h1 className='text-center font-bold text-3xl'>Why Choose RentEase?</h1>
-            <section className="py-16 bg-white">
-                <div className="max-w-6xl mx-auto px-6 grid md:grid-cols-3 gap-10 text-center">
-                    {features.map((feature, index) => (
-                        <motion.div
-                            key={index}
-                            initial={{ opacity: 0, y: 40 }}
-                            whileInView={{ opacity: 1, y: 0 }}
-                            transition={{ duration: 0.6, delay: index * 0.2 }}
-                            viewport={{ once: true }}
-                            className="flex flex-col items-center"
-                        >
-                            <div className="flex items-center justify-center w-20 h-20 rounded-full bg-green-50 mb-4">
-                                {feature.icon}
-                            </div>
-                            <h3 className="text-lg font-semibold mb-2">{feature.title}</h3>
-                            <p className="text-gray-600 max-w-xs">{feature.description}</p>
-                        </motion.div>
-                    ))}
-                </div>
-            </section>
+        <section className='py-24 bg-white overflow-hidden'>
+            <div className="container mx-auto px-6">
+                <motion.div 
+                    initial={{ opacity: 0, y: 20 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    className="text-center mb-20"
+                >
+                    <h2 className="text-4xl md:text-6xl font-display font-extrabold text-zinc-900 tracking-tighter mb-4">
+                        Reinventing <span className="text-zinc-400">Rental Logistics.</span>
+                    </h2>
+                    <p className="text-zinc-500 font-medium max-w-xl mx-auto">
+                        A suite of powerful tools designed to make renting as effortless 
+                        as it should be.
+                    </p>
+                </motion.div>
+
+                <motion.div 
+                    variants={containerVariants}
+                    initial="hidden"
+                    whileInView="show"
+                    viewport={{ once: true }}
+                    className="grid grid-cols-1 md:grid-cols-12 gap-6 auto-rows-[300px]"
+                >
+                    {/* Feature 1: Wide */}
+                    <motion.div 
+                        variants={itemVariants}
+                        whileHover={{ y: -5 }}
+                        className="md:col-span-8 premium-card p-10 flex flex-col justify-end relative overflow-hidden group"
+                    >
+                         <div className="absolute top-10 left-10 p-5 rounded-3xl bg-brand-50 text-brand-600 group-hover:scale-110 transition-transform duration-500">
+                             <Users size={40} weight="fill" />
+                         </div>
+                         <div className="relative z-10">
+                            <h3 className="text-3xl font-display font-extrabold text-zinc-900 mb-3 tracking-tight">Direct Connection</h3>
+                            <p className="text-zinc-500 max-w-md font-medium leading-relaxed">Connect directly with landlords and tenants. No middleman fees, no hidden costs. Just pure, transparent communication.</p>
+                         </div>
+                         <div className="absolute top-[-10%] right-[-5%] text-[15rem] font-display font-black text-zinc-50 opacity-[0.03] pointer-events-none group-hover:opacity-[0.05] transition-opacity">
+                             01
+                         </div>
+                    </motion.div>
+
+                    {/* Feature 2: Small */}
+                    <motion.div 
+                        variants={itemVariants}
+                        whileHover={{ y: -5 }}
+                        className="md:col-span-4 premium-card p-10 flex flex-col gap-6 group"
+                    >
+                        <div className="p-5 rounded-3xl bg-zinc-900 text-white self-start group-hover:rotate-12 transition-transform duration-500">
+                             <ShieldCheck size={40} weight="bold" />
+                        </div>
+                        <div>
+                            <h3 className="text-2xl font-display font-extrabold text-zinc-900 mb-3 tracking-tight">Verified Profiles</h3>
+                            <p className="text-zinc-500 font-medium leading-relaxed">Every listing and user is strictly vetted to ensure a safe and secure community for everyone.</p>
+                        </div>
+                    </motion.div>
+
+                    {/* Feature 3: Small */}
+                    <motion.div 
+                        variants={itemVariants}
+                        whileHover={{ y: -5 }}
+                        className="md:col-span-4 premium-card p-10 flex flex-col gap-6 group"
+                    >
+                        <div className="p-5 rounded-3xl bg-brand-600 text-white self-start group-hover:-rotate-12 transition-transform duration-500">
+                             <ChatCircleDots size={40} weight="bold" />
+                        </div>
+                        <div>
+                            <h3 className="text-2xl font-display font-extrabold text-zinc-900 mb-3 tracking-tight">Smart Messaging</h3>
+                            <p className="text-zinc-500 font-medium leading-relaxed">Real-time chat with instant notifications keeps your conversations flowing and deals moving.</p>
+                        </div>
+                    </motion.div>
+
+                    {/* Feature 4: Wide */}
+                    <motion.div 
+                        variants={itemVariants}
+                        whileHover={{ y: -5 }}
+                        className="md:col-span-8 premium-card p-10 flex flex-col justify-end relative overflow-hidden group"
+                    >
+                         <div className="absolute top-10 left-10 p-5 rounded-3xl bg-zinc-100 text-zinc-900 group-hover:scale-110 transition-transform duration-500">
+                             <ChartLineUp size={40} weight="fill" />
+                         </div>
+                         <div className="relative z-10">
+                            <h3 className="text-3xl font-display font-extrabold text-zinc-900 mb-3 tracking-tight">Easy Management</h3>
+                            <p className="text-zinc-500 max-w-md font-medium leading-relaxed">Manage bookings, payments, and communication in one intuitive dashboard. Stay on top of your rental empire with ease.</p>
+                         </div>
+                         <div className="absolute top-[-10%] right-[-5%] text-[15rem] font-display font-black text-zinc-50 opacity-[0.03] pointer-events-none group-hover:opacity-[0.05] transition-opacity">
+                             04
+                         </div>
+                    </motion.div>
+                </motion.div>
+            </div>
         </section>
     )
 }
 
-export default HomeFeatures
+export default HomeFeatures;

@@ -1,16 +1,22 @@
 import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
+import apiClient from '../api/client';
 
 const RegisterForm = () => {
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
-    fullName: '',
+    firstName: '',
+    lastName: '',
     email: '',
+    phoneNumber: '',
     password: '',
-    confirmPassword: ''
+    confirmPassword: '',
+    role: 'Tenant',
   });
 
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
+  const [loading, setLoading] = useState(false);
 
   const handleChange = (e) => {
     const { id, value } = e.target;
@@ -19,130 +25,118 @@ const RegisterForm = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setError('');
+    setSuccess('');
 
-    // basic validation
     if (formData.password !== formData.confirmPassword) {
       setError('Passwords do not match!');
-      setSuccess('');
+      return;
+    }
+    if (formData.password.length < 6) {
+      setError('Password must be at least 6 characters.');
       return;
     }
 
+    setLoading(true);
     try {
-      const response = await fetch('http://localhost:5000/api/auth/register', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          name: formData.fullName,
-          email: formData.email,
-          password: formData.password
-        })
+      await apiClient.post('/auth/register', {
+        firstName: formData.firstName.trim(),
+        lastName: formData.lastName.trim(),
+        email: formData.email.trim(),
+        password: formData.password,
+        phoneNumber: formData.phoneNumber.trim() || undefined,
+        role: formData.role,
       });
 
-      const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error(data.message || 'Registration failed');
-      }
-
-      setSuccess('✅ Registration successful!');
-      setError('');
-
-      // optionally clear form
-      setFormData({
-        fullName: '',
-        email: '',
-        password: '',
-        confirmPassword: ''
-      });
-
+      setSuccess('✅ Registration successful! Redirecting to login…');
+      setTimeout(() => navigate('/login'), 1500);
     } catch (err) {
-      setError(err.message);
-      setSuccess('');
+      setError(err.response?.data?.message || 'Registration failed. Please try again.');
+    } finally {
+      setLoading(false);
     }
   };
 
+  const inputCls =
+    'shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-green-700';
+
   return (
-    <form 
-      onSubmit={handleSubmit} 
+    <form
+      onSubmit={handleSubmit}
       className="bg-white mt-10 shadow-md rounded px-8 pt-6 pb-8 mb-4 max-w-md mx-auto"
     >
-      <h2 className="text-2xl font-bold mb-6 text-center text-gray-800">Register</h2>
+      <h2 className="text-2xl font-bold mb-6 text-center text-gray-800">Create Account</h2>
 
       {error && <p className="text-red-500 text-sm mb-4">{error}</p>}
-      {success && <p className="text-green-500 text-sm mb-4">{success}</p>}
+      {success && <p className="text-green-600 text-sm mb-4">{success}</p>}
 
-      <div className="mb-4">
-        <label htmlFor="fullName" className="block text-gray-700 text-sm font-bold mb-2">
-          Full Name
-        </label>
-        <input
-          id="fullName"
-          type="text"
-          value={formData.fullName}
-          onChange={handleChange}
-          placeholder="John Doe"
-          required
-          className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-        />
+      {/* First + Last name */}
+      <div className="grid grid-cols-2 gap-3 mb-4">
+        <div>
+          <label htmlFor="firstName" className="block text-gray-700 text-sm font-bold mb-2">First Name</label>
+          <input id="firstName" type="text" value={formData.firstName} onChange={handleChange}
+            placeholder="John" required className={inputCls} />
+        </div>
+        <div>
+          <label htmlFor="lastName" className="block text-gray-700 text-sm font-bold mb-2">Last Name</label>
+          <input id="lastName" type="text" value={formData.lastName} onChange={handleChange}
+            placeholder="Doe" required className={inputCls} />
+        </div>
       </div>
 
+      {/* Email */}
       <div className="mb-4">
-        <label htmlFor="email" className="block text-gray-700 text-sm font-bold mb-2">
-          Email Address
-        </label>
-        <input
-          id="email"
-          type="email"
-          value={formData.email}
-          onChange={handleChange}
-          placeholder="example@email.com"
-          required
-          className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-        />
+        <label htmlFor="email" className="block text-gray-700 text-sm font-bold mb-2">Email Address</label>
+        <input id="email" type="email" value={formData.email} onChange={handleChange}
+          placeholder="example@email.com" required className={inputCls} />
       </div>
 
+      {/* Phone */}
       <div className="mb-4">
-        <label htmlFor="password" className="block text-gray-700 text-sm font-bold mb-2">
-          Password
+        <label htmlFor="phoneNumber" className="block text-gray-700 text-sm font-bold mb-2">
+          Phone Number <span className="font-normal text-gray-400">(optional)</span>
         </label>
-        <input
-          id="password"
-          type="password"
-          value={formData.password}
-          onChange={handleChange}
-          placeholder="********"
-          required
-          className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-        />
+        <input id="phoneNumber" type="tel" value={formData.phoneNumber} onChange={handleChange}
+          placeholder="+234 800 000 0000" className={inputCls} />
       </div>
 
+      {/* Role */}
+      <div className="mb-4">
+        <label htmlFor="role" className="block text-gray-700 text-sm font-bold mb-2">I am a…</label>
+        <select id="role" value={formData.role} onChange={handleChange}
+          className={inputCls}>
+          <option value="Tenant">Tenant (looking to rent)</option>
+          <option value="Landlord">Landlord (listing property)</option>
+        </select>
+      </div>
+
+      {/* Password */}
+      <div className="mb-4">
+        <label htmlFor="password" className="block text-gray-700 text-sm font-bold mb-2">Password</label>
+        <input id="password" type="password" value={formData.password} onChange={handleChange}
+          placeholder="Min. 6 characters" required className={inputCls} />
+      </div>
+
+      {/* Confirm Password */}
       <div className="mb-6">
-        <label htmlFor="confirmPassword" className="block text-gray-700 text-sm font-bold mb-2">
-          Confirm Password
-        </label>
-        <input
-          id="confirmPassword"
-          type="password"
-          value={formData.confirmPassword}
-          onChange={handleChange}
-          placeholder="********"
-          required
-          className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-        />
+        <label htmlFor="confirmPassword" className="block text-gray-700 text-sm font-bold mb-2">Confirm Password</label>
+        <input id="confirmPassword" type="password" value={formData.confirmPassword} onChange={handleChange}
+          placeholder="Repeat password" required className={inputCls} />
       </div>
 
-      <div className="flex items-center justify-between">
-        <button 
-          type="submit"
-          className="bg-green-900 hover:bg-green-800 text-white font-bold py-2 px-4 rounded
-                     focus:outline-none focus:shadow-outline w-full cursor-pointer"
-        >
-          Register
-        </button>
-      </div>
-        <p>Already have an account? <Link to="/login" className="text-green-500">Login here</Link></p>
+      <button
+        type="submit"
+        disabled={loading}
+        className="bg-green-900 hover:bg-green-800 disabled:bg-green-400 text-white font-bold py-2 px-4 rounded
+                   focus:outline-none focus:shadow-outline w-full cursor-pointer transition-colors"
+      >
+        {loading ? 'Creating account…' : 'Register'}
+      </button>
+
+      <p className="mt-4 text-center text-sm">
+        Already have an account?{' '}
+        <Link to="/login" className="text-green-600 hover:underline font-medium">Login here</Link>
+      </p>
     </form>
   );
 };

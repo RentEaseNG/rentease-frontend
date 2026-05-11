@@ -9,8 +9,10 @@ const AddPropertyButton = () => {
         navigate('/new')
     }
 
-    if(!user){
-      return
+    const LANDLORD_ROLES = ['Landlord', 'Admin', 'SuperAdmin'];
+
+    if (!user || !LANDLORD_ROLES.includes(user.role)) {
+      return null;
     }
 
   return (

@@ -1,19 +1,38 @@
-import React from 'react'
-import DashboardListedProperties from '../components/DashboardListedProperties'
-import DashboardBookedProperties from '../components/DashboardBookedProperties'
-import { useAuth } from '../context/AuthContext'
+import React from 'react';
+import { Navigate } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
+import TenantDashboard   from './dashboard/TenantDashboard';
+import LandlordDashboard from './dashboard/LandlordDashboard';
 
+/**
+ * Smart dashboard router.
+ * - Admin    → /admin  (full admin panel)
+ * - Landlord → LandlordDashboard
+ * - Tenant   → TenantDashboard  (default)
+ */
 const Dashboard = () => {
-    const { user } = useAuth()
-    return (
-        <div className='m-4'>
-            <h1 className='font-bold text-3xl my-4'>Welcome Back, {user.name}!</h1>
-            <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6'>
-                <DashboardListedProperties />
-                <DashboardBookedProperties />
-            </div>
-        </div>
-    )
-}
+    const { user, loading } = useAuth();
 
-export default Dashboard
+    if (loading) {
+        return (
+            <div className="flex justify-center items-center h-screen">
+                <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-green-600" />
+            </div>
+        );
+    }
+
+    if (!user) return <Navigate to="/login" replace />;
+
+    switch (user.role) {
+        case 'Admin':
+        case 'SuperAdmin':
+            return <Navigate to="/admin" replace />;
+        case 'Landlord':
+            return <LandlordDashboard />;
+        case 'Tenant':
+        default:
+            return <TenantDashboard />;
+    }
+};
+
+export default Dashboard;

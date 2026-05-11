@@ -1,31 +1,32 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { motion, AnimatePresence } from "framer-motion";
 import { useAuth } from "../context/AuthContext";
-import axios from "axios";
-import Image from "../components/ImageLoader";
+import apiClient from "../api/client";
+import PropertyCard from "../components/PropertyCard";
+import { MagnifyingGlass } from "@phosphor-icons/react";
 
 function FeaturedProperties({ query }) {
   const { user } = useAuth();
   const navigate = useNavigate();
-  const [houses, setHouses] = useState([]); // ✅ local state for houses
+  const [houses, setHouses] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchHouses = async () => {
       try {
-        const res = await axios.get("http://localhost:5000/api/properties");
-        setHouses(res.data.data || []); // ✅ store API response in state
+        const res = await apiClient.get("/properties");
+        const payload = res.data.data;
+        setHouses(Array.isArray(payload) ? payload : (payload?.properties ?? []));
       } catch (err) {
         console.error("Error fetching houses:", err);
       } finally {
         setLoading(false);
       }
     };
-
     fetchHouses();
   }, []);
 
-  // 🔎 Client-side filtering
   const filteredHouses = houses.filter((house) => {
     if (!query) return true;
     const q = query.toLowerCase();
@@ -44,44 +45,94 @@ function FeaturedProperties({ query }) {
     }
   };
 
-  if (loading) {
-    return <div className="p-6 text-gray-600">Loading properties...</div>;
-  }
+  const container = {
+    hidden: { opacity: 0 },
+    show: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.1
+      }
+    }
+  };
+
+  const item = {
+    hidden: { opacity: 0, y: 20 },
+    show: { 
+      opacity: 1, 
+      y: 0,
+      transition: { duration: 0.6, ease: [0.16, 1, 0.3, 1] }
+    }
+  };
 
   return (
-    <div className="min-h-screen bg-gray-50 p-6">
-      <h1 className="text-2xl font-bold text-gray-800 mb-6">
-        Available Properties
-      </h1>
-
-      {filteredHouses.length === 0 ? (
-        <p className="text-gray-500">No properties found.</p>
-      ) : (
-        <div className="grid gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
-          {filteredHouses.map((house) => (
-            <div
-              key={house._id}
-              onClick={() => handleCardClick(house._id)}
-              className="cursor-pointer bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition"
+    <section className="py-20 bg-zinc-50">
+      <div className="container mx-auto px-6">
+        <div className="flex flex-col md:flex-row justify-between items-end mb-12 gap-6">
+          <div className="max-w-2xl">
+            <h2 className="text-3xl md:text-5xl font-display font-extrabold text-zinc-900 tracking-tighter mb-4">
+              Featured <span className="text-zinc-400">Collections.</span>
+            </h2>
+            <p className="text-zinc-500 font-medium">
+              Explore our hand-picked selection of the most desirable properties 
+              currently available for lease.
+            </p>
+          </div>
+          <div className="hidden md:block">
+            <button 
+              onClick={() => navigate('/listings')}
+              className="group flex items-center gap-2 text-sm font-bold text-zinc-900 hover:text-brand-600 transition-colors"
             >
-              <Image
-                src={house.images[0]}
-                alt={house.title}
-                className="w-full h-40 object-cover"
-              />
-              <div className="p-4">
-                <h2 className="font-semibold text-lg">{house.title}</h2>
-                <p className="text-green-600 font-bold mt-1">₦{house.price?.toLocaleString()}</p>
-                <p className="text-gray-500 text-sm">{house.location}</p>
-                <p className="text-gray-600 text-sm mt-2 w-fit px-2 rounded-sm bg-gray-200 ml-auto">
-                  {house?.apartmentType?.name}
-                </p>
-              </div>
-            </div>
-          ))}
+              View all listings
+              <motion.div
+                whileHover={{ x: 5 }}
+                transition={{ type: "spring", stiffness: 400, damping: 10 }}
+              >
+                <MagnifyingGlass size={18} weight="bold" />
+              </motion.div>
+            </button>
+          </div>
         </div>
-      )}
-    </div>
+
+        {loading ? (
+          <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+            {[...Array(4)].map((_, i) => (
+              <div key={i} className="bg-zinc-200 animate-pulse rounded-3xl aspect-[4/5]" />
+            ))}
+          </div>
+        ) : filteredHouses.length === 0 ? (
+          <motion.div 
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            className="flex flex-col items-center justify-center py-20 text-center"
+          >
+            <div className="w-20 h-20 rounded-full bg-zinc-100 flex items-center justify-center text-zinc-400 mb-6">
+              <MagnifyingGlass size={40} />
+            </div>
+            <h3 className="text-xl font-display font-bold text-zinc-900 mb-2">No properties found</h3>
+            <p className="text-zinc-500 max-w-xs">We couldn't find any properties matching your search criteria.</p>
+          </motion.div>
+        ) : (
+          <motion.div 
+            variants={container}
+            initial="hidden"
+            whileInView="show"
+            viewport={{ once: true }}
+            className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4"
+          >
+            <AnimatePresence>
+              {filteredHouses.map((house) => (
+                <motion.div key={house._id} variants={item}>
+                  <PropertyCard
+                    house={house}
+                    onClick={handleCardClick}
+                  />
+                </motion.div>
+              ))}
+            </AnimatePresence>
+          </motion.div>
+        )}
+      </div>
+    </section>
   );
 }
 

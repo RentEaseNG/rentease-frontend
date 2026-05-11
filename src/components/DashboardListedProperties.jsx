@@ -1,33 +1,32 @@
 import React, { useEffect, useState } from 'react'
 import { useAuth } from '../context/AuthContext'
-import axios from 'axios';
+import { Link } from 'react-router-dom'
+import apiClient from '../api/client';
 
-const DashboardListedProperties  = () => {
-    const [listedPropeties, setListedProperties] = useState(0);
-    const { user } = useAuth();
+const DashboardListedProperties = () => {
+    const [listedProperties, setListedProperties] = useState(0);
+    const { user, token } = useAuth();
+
     useEffect(() => {
-        const FetchHouses = async () => {
+        const fetchHouses = async () => {
+            if (!token || !user?._id) return;
             try {
-                const res = await axios.get("http://localhost:5000/api/properties")
-                const allProperties = res.data?.data
-                // show only data with the same landlordID as the User._id
-
-                const userProperties = allProperties.filter(
-                    (property) => property.landlord?._id === user?._id
-                );
-                setListedProperties(userProperties.length)
+                const res = await apiClient.get(`/users/${user._id}/properties`);
+                const props = res.data?.data?.properties ?? res.data?.data ?? [];
+                setListedProperties(Array.isArray(props) ? props.length : 0);
             } catch (error) {
                 console.error("error", error)
             }
         }
-        FetchHouses();
-    }, [])
-    return (
-        <div className='bg-white shadow-md p-6'>
-            <p className='text-2xl font-mono'>{listedPropeties}</p>
-            <p className='font-semibold'>Properties Listed</p>
-        </div>
+        fetchHouses();
+    }, [token, user?._id])
 
+    return (
+        <Link to="/my-properties" className='block bg-white shadow-md p-6 rounded-lg hover:shadow-lg transition-shadow group'>
+            <p className='text-2xl font-mono'>{listedProperties}</p>
+            <p className='font-semibold'>Properties Listed</p>
+            <p className='text-green-700 text-sm mt-2 font-medium group-hover:underline'>Manage properties →</p>
+        </Link>
     )
 }
 

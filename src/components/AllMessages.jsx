@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { useAuth } from '../context/AuthContext';
-import axios from 'axios';
+import apiClient from '../api/client';
 
 const AllMessages = () => {
     const { user, token } = useAuth();
@@ -10,12 +10,7 @@ const AllMessages = () => {
         const FetchMessages = async () => {
             if (!user) return;
             try {
-                const res = await axios.get("http://localhost:5000/api/messages/conversations", {
-                    headers: {
-                        "Content-Type": "application/json",
-                        Authorization: `Bearer ${token}`,
-                    },
-                })
+                const res = await apiClient.get("/messages/conversations")
                 setMessages(res.data.data)
             } catch (error) {
                 console.error("Error:", error)
